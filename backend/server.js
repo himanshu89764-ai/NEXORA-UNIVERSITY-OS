@@ -9102,6 +9102,7 @@ require('./v33-v40-enterprise')(app, db);
 require('./v41-v50-production')(app, db);
 
 require('./final-production-hardening')(app, db);
+require('./future-production-readiness')(app, db);
 
 require('./final-completion')(app, db);
 
