@@ -3,3 +3,8 @@ node_modules
 *.db
 *.db-shm
 *.db-wal
+
+# NEXORA UNIVERSITY OS temporary files
+university-os-*.log
+backups/
+backend/*.backup-*
