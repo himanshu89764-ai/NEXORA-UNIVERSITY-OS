@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXORA University OS — Institutional Dashboard</title>
+<style>
+body{font-family:Arial,sans-serif;margin:0;background:#f5f7fb;color:#172033}
+header{background:#111827;color:white;padding:24px 32px}
+main{padding:30px;max-width:1200px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.card{background:white;border-radius:14px;padding:22px;box-shadow:0 3px 15px #00000012}
+.number{font-size:32px;font-weight:700;margin-top:8px}
+.status{margin:20px 0;padding:15px;background:white;border-radius:12px}
+</style>
+</head>
+<body>
+<header>
+<h1>NEXORA University OS</h1>
+<div>Institutional Intelligence Dashboard · V2</div>
+</header>
+<main>
+<div class="status" id="status">Loading institutional data...</div>
+<div class="grid" id="cards"></div>
+</main>
+<script>
+fetch('/api/v2/dashboard')
+.then(r=>r.json())
+.then(d=>{
+ document.getElementById('status').textContent='Institutional Database: ONLINE';
+ const labels={
+ universities:'Universities',colleges:'Colleges',departments:'Departments',
+ programs:'Programs',semesters:'Semesters',subjects:'Subjects',
+ students:'Students',skills:'Skills',employers:'Employers'
+ };
+ document.getElementById('cards').innerHTML=
+ Object.entries(d.institution).map(([k,v])=>
+ `<div class="card"><div>${labels[k]||k}</div><div class="number">${v}</div></div>`
+ ).join('');
+})
+.catch(()=>document.getElementById('status').textContent='Dashboard API offline');
+</script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXORA University OS — Intelligence Command Center</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+header{padding:28px 34px;background:#111827;color:white}
+h1{margin:0 0 8px}.sub{opacity:.8}
+main{padding:28px;max-width:1200px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.card{background:white;border-radius:14px;padding:20px;box-shadow:0 3px 14px #0001}
+.card h3{margin-top:0}.status{font-weight:bold}
+.flow{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.node{background:white;padding:12px 16px;border-radius:10px;border:1px solid #ddd}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px}
+button{padding:10px 16px;border:0;border-radius:8px;cursor:pointer}
+</style>
+
+<style id="v16-clean-executive-ui">
+.v16-clean-card{
+  margin-top:24px!important;
+  padding:24px!important;
+  border:1px solid #26334d!important;
+  border-radius:18px!important;
+  background:#0d1424!important;
+  box-sizing:border-box!important;
+}
+.v16-clean-card h2{
+  font-size:20px!important;
+  line-height:1.3!important;
+  margin:0 0 8px!important;
+  letter-spacing:.2px!important;
+}
+.v16-clean-card [id$="-status"]{
+  padding:9px 12px!important;
+  margin:0 0 18px!important;
+  border-radius:9px!important;
+  background:#111a2d!important;
+  font-size:12px!important;
+  line-height:1.5!important;
+}
+.v16-clean-card [id$="-summary"],
+.v16-clean-card [id$="-metrics"]{
+  display:grid!important;
+  grid-template-columns:repeat(auto-fit,minmax(170px,1fr))!important;
+  gap:14px!important;
+}
+.v16-clean-card [id$="-summary"] > div,
+.v16-clean-card [id$="-metrics"] > div{
+  min-height:92px!important;
+  padding:16px!important;
+  border:1px solid #2a3955!important;
+  border-radius:13px!important;
+  background:#111a2d!important;
+  box-sizing:border-box!important;
+}
+.v16-clean-card [id$="-summary"] > div > div:first-child,
+.v16-clean-card [id$="-metrics"] > div > div:first-child{
+  font-size:12px!important;
+  line-height:1.4!important;
+  opacity:.72!important;
+}
+.v16-clean-card [id$="-summary"] > div > div:nth-child(2),
+.v16-clean-card [id$="-metrics"] > div > div:nth-child(2){
+  font-size:27px!important;
+  line-height:1.15!important;
+  font-weight:800!important;
+  margin:7px 0!important;
+}
+.v16-clean-card [id$="-summary"] > div > div:last-child,
+.v16-clean-card [id$="-metrics"] > div > div:last-child{
+  font-size:11px!important;
+  line-height:1.4!important;
+  opacity:.55!important;
+}
+#v16-inst-list{
+  margin-top:20px!important;
+  padding-top:4px!important;
+}
+#v16-inst-list > div:first-child{
+  font-size:14px!important;
+  margin-bottom:10px!important;
+}
+@media(max-width:600px){
+  .v16-clean-card{padding:17px!important}
+  .v16-clean-card [id$="-summary"],
+  .v16-clean-card [id$="-metrics"]{
+    grid-template-columns:repeat(2,minmax(0,1fr))!important;
+  }
+}
+</style>
+
+
+<style id="v16-white-theme-fix">
+.v16-clean-card{
+  background:#ffffff!important;
+  color:#111827!important;
+  border:1px solid #d9dee7!important;
+  box-shadow:0 4px 18px rgba(0,0,0,.06)!important;
+}
+.v16-clean-card h2{
+  color:#111827!important;
+}
+.v16-clean-card [id$="-status"]{
+  background:#f5f7fa!important;
+  color:#374151!important;
+  border:1px solid #e1e5eb!important;
+}
+.v16-clean-card [id$="-summary"] > div,
+.v16-clean-card [id$="-metrics"] > div{
+  background:#ffffff!important;
+  color:#111827!important;
+  border:1px solid #dfe4eb!important;
+  box-shadow:0 2px 8px rgba(0,0,0,.04)!important;
+}
+.v16-clean-card [id$="-summary"] > div > div:first-child,
+.v16-clean-card [id$="-metrics"] > div > div:first-child{
+  color:#4b5563!important;
+  opacity:1!important;
+}
+.v16-clean-card [id$="-summary"] > div > div:nth-child(2),
+.v16-clean-card [id$="-metrics"] > div > div:nth-child(2){
+  color:#111827!important;
+}
+.v16-clean-card [id$="-summary"] > div > div:last-child,
+.v16-clean-card [id$="-metrics"] > div > div:last-child{
+  color:#6b7280!important;
+  opacity:1!important;
+}
+#v16-inst-list{
+  color:#111827!important;
+}
+#v16-inst-list > div:first-child{
+  color:#111827!important;
+}
+#v16-inst-list > div:not(:first-child){
+  background:#ffffff!important;
+  color:#111827!important;
+  border-color:#dfe4eb!important;
+}
+</style>
+
+</head>
+<body>
+<header>
+<h1>NEXORA University OS</h1>
+<div class="sub">V16 Intelligence Command Center</div>
+</header>
+<main>
+<div class="grid">
+<div class="card"><h3>Academic</h3><div>University → College → Department → Program → Semester → Subject</div></div>
+<div class="card"><h3>Curriculum</h3><div>Units → Topics → Learning Outcomes → Content</div></div>
+<div class="card"><h3>Student</h3><div>Enrollment → Learning → Assessment → Skills → Evidence</div></div>
+<div class="card"><h3>Placement</h3><div>Readiness → Employers → Hiring Outcomes → Analytics</div></div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h2>Intelligence Flow</h2>
+<div class="flow">
+<div class="node">University</div><div class="node">College</div>
+<div class="node">Department</div><div class="node">Program</div>
+<div class="node">Semester</div><div class="node">Subject</div>
+<div class="node">Curriculum</div><div class="node">Content</div>
+<div class="node">Assessment</div><div class="node">Skills</div>
+<div class="node">Student</div><div class="node">Employer</div>
+<div class="node">Placement</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h2>Live API Status</h2>
+<div id="status">Checking...</div>
+<button onclick="loadStatus()">Refresh</button>
+<pre id="details"></pre>
+</div>
+</main>
+
+<script>
+async function check(url){
+ try{
+  const r=await fetch(url);
+  return {url,status:r.status,ok:r.ok};
+ }catch(e){return {url,status:"OFFLINE",ok:false}}
+}
+async function loadStatus(){
+ const urls=[
+  "/api/health",
+  "/api/university-os",
+  "/api/university-dashboard",
+  "/api/v2/dashboard"
+ ];
+ const results=await Promise.all(urls.map(check));
+ document.getElementById("status").innerHTML=
+  results.map(x=>`<div class="status">${x.ok?"✓":"✗"} ${x.url} — ${x.status}</div>`).join("");
+ document.getElementById("details").textContent=JSON.stringify(results,null,2);
+}
+loadStatus();
+</script>
+
+<section style="margin-top:24px;padding:22px;border:1px solid #243047;border-radius:16px;background:#0d1424">
+  <h2 style="margin:0 0 6px">V16 LIVE DATABASE INTELLIGENCE</h2>
+  <div id="v16-db-status" style="font-size:13px;opacity:.75;margin-bottom:18px">
+    Connecting to university-os.db...
+  </div>
+
+  <div id="v16-metrics" style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;">
+  </div>
+</section>
+
+<script>
+(async function loadV16Intelligence(){
+  const status = document.getElementById('v16-db-status');
+  const metrics = document.getElementById('v16-metrics');
+
+  try {
+    const r = await fetch('/api/v16/intelligence-summary', {
+      cache: 'no-store'
+    });
+    const data = await r.json();
+
+    if (!r.ok || !data.ok) {
+      throw new Error(data.error || 'V16 API unavailable');
+    }
+
+    const L = data.layers;
+
+    const cards = [
+      ['Academic', L.academic.total, 'Universities ' + L.academic.universities + ' · Colleges ' + L.academic.colleges],
+      ['Curriculum', L.curriculum.total, 'Units ' + L.curriculum.units + ' · Topics ' + L.curriculum.topics],
+      ['Learning Outcomes', L.curriculum.learning_outcomes, 'Verified curriculum outcomes'],
+      ['Content', L.curriculum.content, 'Academic content records'],
+      ['Students', L.student.students, 'Active student intelligence base'],
+      ['Assessments', L.student.assessments, 'Assessment intelligence records'],
+      ['Skills', L.skills.skills, 'Institution skill taxonomy'],
+      ['Skill Evidence', L.skills.evidence, 'Evidence-linked records'],
+      ['Employers', L.placement.employers, 'Employer intelligence'],
+      ['Job Roles', L.placement.job_roles, 'Industry role intelligence'],
+      ['Applications', L.placement.applications, 'Placement applications'],
+      ['Hiring Outcomes', L.placement.hiring_outcomes, 'Outcome intelligence']
+    ];
+
+    metrics.innerHTML = cards.map(x => `
+      <div style="padding:16px;border:1px solid #26334d;border-radius:12px;background:#111a2d">
+        <div style="font-size:12px;opacity:.65">${x[0]}</div>
+        <div style="font-size:28px;font-weight:800;margin:5px 0">${Number(x[1]).toLocaleString()}</div>
+        <div style="font-size:11px;opacity:.55">${x[2]}</div>
+      </div>
+    `).join('');
+
+    status.textContent =
+      '● LIVE · Database connected · Read-only intelligence snapshot · ' +
+      new Date(data.generated_at).toLocaleString();
+
+  } catch (e) {
+    status.textContent = '● ERROR · ' + e.message;
+    status.style.color = '#ff6b6b';
+  }
+})();
+</script>
+
+
+<section style="margin-top:24px;padding:22px;border:1px solid #243047;border-radius:16px;background:#0d1424">
+  <h2 style="margin:0 0 6px">V16 INSTITUTION INTELLIGENCE</h2>
+  <div id="v16-inst-status" style="font-size:13px;opacity:.75;margin-bottom:18px">
+    Loading institutional intelligence...
+  </div>
+
+  <div id="v16-inst-summary" style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;">
+  </div>
+
+  <div id="v16-inst-list" style="margin-top:18px"></div>
+</section>
+
+<script>
+(async function loadInstitutionIntelligence(){
+  const status = document.getElementById('v16-inst-status');
+  const summary = document.getElementById('v16-inst-summary');
+  const list = document.getElementById('v16-inst-list');
+
+  try {
+    const r = await fetch('/api/v16/institution-intelligence', {
+      cache: 'no-store'
+    });
+    const d = await r.json();
+
+    if (!r.ok || !d.ok) {
+      throw new Error(d.error || 'Institution API unavailable');
+    }
+
+    const A = d.academic || {};
+    const C = d.curriculum || {};
+    const P = d.people || {};
+    const J = d.placement || {};
+
+    const cards = [
+      ['Universities', A.universities || 0],
+      ['Colleges', A.colleges || 0],
+      ['Departments', A.departments || 0],
+      ['Programs', A.programs || 0],
+      ['Subjects', A.subjects || 0],
+      ['Students', P.students || 0],
+      ['Skills', P.skills || 0],
+      ['Employers', J.employers || 0],
+      ['Job Roles', J.job_roles || 0],
+      ['Applications', J.applications || 0],
+      ['Hiring Outcomes', J.hiring_outcomes || 0]
+    ];
+
+    summary.innerHTML = cards.map(([name, value]) => `
+      <div style="padding:15px;border:1px solid #26334d;border-radius:12px;background:#111a2d">
+        <div style="font-size:12px;opacity:.65">${name}</div>
+        <div style="font-size:27px;font-weight:800;margin-top:5px">
+          ${Number(value).toLocaleString()}
+        </div>
+      </div>
+    `).join('');
+
+    if (d.universities && d.universities.length) {
+      list.innerHTML =
+        '<div style="font-weight:700;margin-bottom:8px">Registered Universities</div>' +
+        d.universities.map(u => `
+          <div style="padding:10px 12px;margin:5px 0;border:1px solid #26334d;border-radius:9px">
+            <strong>${u.name || 'Unnamed University'}</strong>
+            <span style="opacity:.6;font-size:12px">
+              ${u.code ? ' · ' + u.code : ''}
+              ${u.city ? ' · ' + u.city : ''}
+              ${u.state ? ', ' + u.state : ''}
+            </span>
+          </div>
+        `).join('');
+    } else {
+      list.innerHTML =
+        '<div style="padding:14px;border:1px dashed #34445f;border-radius:10px;opacity:.7">' +
+        'No university records onboarded yet. V16 is ready for institutional data.' +
+        '</div>';
+    }
+
+    status.textContent =
+      '● LIVE · Institutional intelligence connected · Read-only';
+
+  } catch (e) {
+    status.textContent = '● ERROR · ' + e.message;
+  }
+})();
+</script>
+
+
+<script id="v16-clean-classifier">
+(function(){
+  document.querySelectorAll('section').forEach(function(section){
+    const title = (section.querySelector('h2') || {}).textContent || '';
+    if (
+      title.includes('V16 LIVE DATABASE INTELLIGENCE') ||
+      title.includes('V16 INSTITUTION INTELLIGENCE')
+    ) {
+      section.classList.add('v16-clean-card');
+    }
+  });
+})();
+</script>
+
+
+<!-- V16_ACADEMIC_TREE_FINAL -->
+<section id="v16-academic-tree" style="margin:28px 0;padding:24px;background:#fff;border:1px solid #e5e7eb;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.06);color:#111827;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#2563eb;">V16 ACADEMIC INTELLIGENCE</div>
+      <h2 style="margin:5px 0 4px;font-size:24px;">Academic Tree</h2>
+      <div style="color:#6b7280;font-size:14px;">University → College → Department → Program → Semester → Subject</div>
+    </div>
+    <button onclick="loadV16AcademicTree()" style="border:0;border-radius:10px;padding:10px 16px;background:#111827;color:#fff;font-weight:700;cursor:pointer;">Refresh Tree</button>
+  </div>
+  <div id="v16AcademicTreeCounts" style="display:flex;gap:10px;flex-wrap:wrap;margin:18px 0;"></div>
+  <div id="v16AcademicTreeBody" style="font-size:14px;">Loading academic tree...</div>
+</section>
+
+<script>
+async function loadV16AcademicTree(){
+  const body=document.getElementById('v16AcademicTreeBody');
+  const counts=document.getElementById('v16AcademicTreeCounts');
+  try{
+    const r=await fetch('/api/v16/academic-tree');
+    const data=await r.json();
+    if(!data.success) throw new Error(data.error||'Academic Tree API failed');
+
+    counts.innerHTML=Object.entries(data.counts).map(([k,v]) =>
+      '<div style="padding:9px 13px;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:10px;">'+
+      '<b>'+v+'</b> '+k+'</div>'
+    ).join('');
+
+    if(!data.tree.length){
+      body.innerHTML='<div style="padding:22px;background:#f9fafb;border-radius:12px;color:#6b7280;">No university academic records onboarded yet. The V16 Academic Tree is ready.</div>';
+      return;
+    }
+
+    const esc=x=>String(x??'').replace(/[&<>"']/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]));
+
+    body.innerHTML=data.tree.map(u=>`
+      <details open style="margin:8px 0;border:1px solid #dbeafe;border-radius:12px;padding:10px 14px;">
+        <summary style="cursor:pointer;font-weight:800;color:#1d4ed8;">University: ${esc(u.name)} ${u.code?'('+esc(u.code)+')':''}</summary>
+        ${u.colleges.map(c=>`
+          <details style="margin:9px 0 0 16px;padding:8px 12px;border-left:3px solid #93c5fd;">
+            <summary style="cursor:pointer;font-weight:700;">College: ${esc(c.name)}</summary>
+            ${c.departments.map(d=>`
+              <details style="margin:8px 0 0 16px;padding:7px 12px;border-left:3px solid #c4b5fd;">
+                <summary style="cursor:pointer;font-weight:700;">Department: ${esc(d.name)}</summary>
+                ${d.programs.map(p=>`
+                  <details style="margin:8px 0 0 16px;padding:7px 12px;border-left:3px solid #86efac;">
+                    <summary style="cursor:pointer;font-weight:700;">Program: ${esc(p.name)} ${p.degree?'— '+esc(p.degree):''}</summary>
+                    ${p.semesters.map(sm=>`
+                      <details style="margin:8px 0 0 16px;padding:7px 12px;border-left:3px solid #fcd34d;">
+                        <summary style="cursor:pointer;font-weight:700;">Semester ${esc(sm.semester_number)}</summary>
+                        <div style="margin:8px 0 0 16px;">
+                          ${sm.subjects.length ? sm.subjects.map(sub=>`
+                            <div style="padding:7px 10px;margin:4px 0;background:#f9fafb;border-radius:8px;">
+                              <b>${esc(sub.name)}</b>${sub.code?' · '+esc(sub.code):''}${sub.credits!=null?' · '+esc(sub.credits)+' credits':''}
+                            </div>`).join('') : '<span style="color:#9ca3af;">No subjects</span>'}
+                        </div>
+                      </details>`).join('')}
+                  </details>`).join('')}
+              </details>`).join('')}
+          </details>`).join('')}
+      </details>`).join('') : `
+      </details>`).join('')}
+      </details>`).join('') : ''}`).join('');
+  }catch(e){
+    body.innerHTML='<div style="padding:16px;background:#fef2f2;color:#b91c1c;border-radius:10px;">Academic Tree error: '+String(e.message||e)+'</div>';
+  }
+}
+document.addEventListener('DOMContentLoaded',loadV16AcademicTree);
+</script>
+
+
+<!-- V17_FACULTY_INTELLIGENCE_UI_FINAL -->
+<section id="v17-faculty-intelligence" style="margin:28px 0;padding:24px;background:#fff;border:1px solid #e5e7eb;border-radius:18px;box-shadow:0 8px 24px rgba(0,0,0,.06);color:#111827;">
+  <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#7c3aed;">V17 FACULTY INTELLIGENCE</div>
+  <h2 style="margin:5px 0;">Faculty Intelligence Engine</h2>
+  <div style="color:#6b7280;font-size:14px;">
+    Faculty → Department → Subjects → Workload → Evidence → Performance
+  </div>
+
+  <div id="v17FacultyStatus" style="margin-top:16px;padding:14px;background:#f9fafb;border-radius:10px;">
+    Checking V17...
+  </div>
+
+  <div id="v17FacultyCards" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;"></div>
+
+  <div style="margin-top:18px;padding:16px;background:#f9fafb;border-radius:12px;">
+    <b>Institution ID</b>
+    <input id="v17InstitutionId" type="number" value="1"
+      style="margin-left:10px;padding:9px;border:1px solid #d1d5db;border-radius:8px;width:100px;">
+    <button onclick="loadV17Faculty()" style="margin-left:8px;padding:9px 15px;border:0;border-radius:8px;background:#111827;color:white;font-weight:700;cursor:pointer;">
+      Load Faculty Intelligence
+    </button>
+  </div>
+
+  <div id="v17FacultyList" style="margin-top:16px;"></div>
+</section>
+
+<script>
+async function loadV17Faculty(){
+  const id=document.getElementById('v17InstitutionId').value||1;
+  const list=document.getElementById('v17FacultyList');
+  try{
+    const r=await fetch('/api/v17/faculty-intelligence/'+encodeURIComponent(id));
+    const d=await r.json();
+    if(!d.success) throw new Error(d.error||'V17 API failed');
+
+    const s=d.summary||{};
+    document.getElementById('v17FacultyCards').innerHTML=[
+      ['Faculty',s.faculty||0],
+      ['Active',s.active_faculty||0],
+      ['Assignments',s.teaching_assignments||0],
+      ['Weekly Hours',s.weekly_hours||0],
+      ['Evidence',s.evidence||0]
+    ].map(x=>'<div style="padding:12px 16px;background:#f3f4f6;border:1px solid #e5e7eb;border-radius:10px;"><b>'+x[1]+'</b><br><span style="color:#6b7280;font-size:12px;">'+x[0]+'</span></div>').join('');
+
+    if(!d.faculty.length){
+      list.innerHTML='<div style="padding:18px;background:#f9fafb;border-radius:10px;color:#6b7280;">No faculty records onboarded yet. V17 Faculty Intelligence is ready.</div>';
+      return;
+    }
+
+    list.innerHTML=d.faculty.map(f=>`
+      <div style="margin:8px 0;padding:14px;border:1px solid #e5e7eb;border-radius:12px;background:white;">
+        <b style="font-size:16px;">${String(f.name||'').replace(/[<>&"]/g,'')}</b>
+        <div style="color:#6b7280;margin-top:4px;">
+          ${String(f.designation||'Faculty')} · ${String(f.department_name||'Department not mapped')}
+        </div>
+        <div style="margin-top:8px;font-size:13px;">
+          Subjects: <b>${f.assigned_subjects||0}</b> ·
+          Weekly Hours: <b>${f.weekly_hours||0}</b> ·
+          Evidence: <b>${f.evidence_count||0}</b>
+        </div>
+      </div>
+    `).join('');
+  }catch(e){
+    list.innerHTML='<div style="padding:15px;background:#fef2f2;color:#b91c1c;border-radius:10px;">V17 error: '+e.message+'</div>';
+  }
+}
+
+async function checkV17Faculty(){
+  try{
+    const r=await fetch('/api/v17/status');
+    const d=await r.json();
+    document.getElementById('v17FacultyStatus').innerHTML=
+      d.success
+      ? '<b style="color:#047857;">● LIVE · V17 Faculty Intelligence ACTIVE</b> · Faculty '+d.counts.faculty+' · Assignments '+d.counts.assignments+' · Evidence '+d.counts.evidence
+      : 'V17 unavailable';
+  }catch(e){
+    document.getElementById('v17FacultyStatus').textContent='V17 status unavailable';
+  }
+}
+document.addEventListener('DOMContentLoaded',()=>{checkV17Faculty();loadV17Faculty();});
+</script>
+<!-- END V17_FACULTY_INTELLIGENCE_UI_FINAL -->
+
+
+<!-- V18_V22_CORE_INTELLIGENCE_UI_FINAL -->
+<section style="margin:28px 0;padding:24px;background:#fff;border:1px solid #e5e7eb;border-radius:18px;color:#111827;box-shadow:0 8px 24px rgba(0,0,0,.06);">
+  <div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#7c3aed;">V18 → V22 CORE INTELLIGENCE</div>
+  <h2 style="margin:5px 0;">Future Intelligence Stack</h2>
+  <div id="v18v22Status" style="margin-top:14px;padding:14px;background:#f9fafb;border-radius:10px;">Checking...</div>
+  <div id="v18v22Modules" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;"></div>
+</section>
+<script>
+(async()=>{
+ try{
+  const r=await fetch('/api/v18-v22/status'),d=await r.json();
+  if(!d.success) throw Error(d.error||'API failed');
+  document.getElementById('v18v22Status').innerHTML='<b style="color:#047857;">● LIVE · V18–V22 CORE INTELLIGENCE ACTIVE</b>';
+  document.getElementById('v18v22Modules').innerHTML=
+   Object.entries(d.modules).map(([v,n])=>
+    '<div style="padding:12px 15px;border:1px solid #e5e7eb;border-radius:10px;background:#f9fafb;"><b>'+v+'</b><br><span style="font-size:12px;color:#6b7280;">'+n+'</span></div>'
+   ).join('');
+ }catch(e){
+  document.getElementById('v18v22Status').textContent='V18–V22 status unavailable';
+ }
+})();
+</script>
+<!-- END V18_V22_CORE_INTELLIGENCE_UI_FINAL -->
+
+
+<!-- V23_V32_ENTERPRISE_UI_FINAL -->
+<section style="margin:28px 0;padding:24px;background:#fff;border:1px solid #e5e7eb;border-radius:18px;color:#111827;box-shadow:0 8px 24px rgba(0,0,0,.06);">
+<div style="font-size:12px;font-weight:800;letter-spacing:1px;color:#dc2626;">V23 → V32 ENTERPRISE INTELLIGENCE</div>
+<h2 style="margin:5px 0;">Future Enterprise Stack</h2>
+<div id="v23v32Status" style="margin-top:14px;padding:14px;background:#f9fafb;border-radius:10px;">Checking enterprise modules...</div>
+<div id="v23v32Modules" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;"></div>
+</section>
+<script>
+(async()=>{
+try{
+ const r=await fetch('/api/v23-v32/status'),d=await r.json();
+ if(!d.success)throw Error('Unavailable');
+ document.getElementById('v23v32Status').innerHTML='<b style="color:#047857;">● LIVE · V23–V32 ENTERPRISE FOUNDATION ACTIVE</b>';
+ document.getElementById('v23v32Modules').innerHTML=
+ Object.entries(d.modules).map(([v,n])=>
+ '<div style="padding:11px 14px;background:#f9fafb;border:1px solid #e5e7eb;border-radius:10px;"><b>'+v+'</b><br><span style="font-size:12px;color:#6b7280;">'+n+'</span></div>'
+ ).join('');
+}catch(e){
+ document.getElementById('v23v32Status').textContent='Enterprise status unavailable';
+}
+})();
+</script>
+<!-- END V23_V32_ENTERPRISE_UI_FINAL -->
+
+</body>
+</html>

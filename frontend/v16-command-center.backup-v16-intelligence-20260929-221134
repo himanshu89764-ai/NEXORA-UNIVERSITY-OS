@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXORA University OS — Intelligence Command Center</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+header{padding:28px 34px;background:#111827;color:white}
+h1{margin:0 0 8px}.sub{opacity:.8}
+main{padding:28px;max-width:1200px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.card{background:white;border-radius:14px;padding:20px;box-shadow:0 3px 14px #0001}
+.card h3{margin-top:0}.status{font-weight:bold}
+.flow{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.node{background:white;padding:12px 16px;border-radius:10px;border:1px solid #ddd}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px}
+button{padding:10px 16px;border:0;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+<h1>NEXORA University OS</h1>
+<div class="sub">V16 Intelligence Command Center</div>
+</header>
+<main>
+<div class="grid">
+<div class="card"><h3>Academic</h3><div>University → College → Department → Program → Semester → Subject</div></div>
+<div class="card"><h3>Curriculum</h3><div>Units → Topics → Learning Outcomes → Content</div></div>
+<div class="card"><h3>Student</h3><div>Enrollment → Learning → Assessment → Skills → Evidence</div></div>
+<div class="card"><h3>Placement</h3><div>Readiness → Employers → Hiring Outcomes → Analytics</div></div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h2>Intelligence Flow</h2>
+<div class="flow">
+<div class="node">University</div><div class="node">College</div>
+<div class="node">Department</div><div class="node">Program</div>
+<div class="node">Semester</div><div class="node">Subject</div>
+<div class="node">Curriculum</div><div class="node">Content</div>
+<div class="node">Assessment</div><div class="node">Skills</div>
+<div class="node">Student</div><div class="node">Employer</div>
+<div class="node">Placement</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h2>Live API Status</h2>
+<div id="status">Checking...</div>
+<button onclick="loadStatus()">Refresh</button>
+<pre id="details"></pre>
+</div>
+</main>
+
+<script>
+async function check(url){
+ try{
+  const r=await fetch(url);
+  return {url,status:r.status,ok:r.ok};
+ }catch(e){return {url,status:"OFFLINE",ok:false}}
+}
+async function loadStatus(){
+ const urls=[
+  "/api/health",
+  "/api/university-os",
+  "/api/university-dashboard",
+  "/api/v2/dashboard"
+ ];
+ const results=await Promise.all(urls.map(check));
+ document.getElementById("status").innerHTML=
+  results.map(x=>`<div class="status">${x.ok?"✓":"✗"} ${x.url} — ${x.status}</div>`).join("");
+ document.getElementById("details").textContent=JSON.stringify(results,null,2);
+}
+loadStatus();
+</script>
+</body>
+</html>

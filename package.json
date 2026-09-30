@@ -1,0 +1,15 @@
+{
+  "name": "nexora-university-os",
+  "version": "0.1.0",
+  "private": true,
+  "description": "NEXORA University & College Intelligence OS",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "node --watch backend/server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "cors": "^2.8.5",
+    "better-sqlite3": "^12.4.1"
+  }
+}

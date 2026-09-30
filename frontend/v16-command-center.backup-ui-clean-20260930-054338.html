@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXORA University OS — Intelligence Command Center</title>
+<style>
+body{margin:0;font-family:Arial,sans-serif;background:#f5f7fb;color:#172033}
+header{padding:28px 34px;background:#111827;color:white}
+h1{margin:0 0 8px}.sub{opacity:.8}
+main{padding:28px;max-width:1200px;margin:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:16px}
+.card{background:white;border-radius:14px;padding:20px;box-shadow:0 3px 14px #0001}
+.card h3{margin-top:0}.status{font-weight:bold}
+.flow{margin-top:24px;display:flex;flex-wrap:wrap;gap:10px}
+.node{background:white;padding:12px 16px;border-radius:10px;border:1px solid #ddd}
+pre{white-space:pre-wrap;word-break:break-word;font-size:12px}
+button{padding:10px 16px;border:0;border-radius:8px;cursor:pointer}
+</style>
+</head>
+<body>
+<header>
+<h1>NEXORA University OS</h1>
+<div class="sub">V16 Intelligence Command Center</div>
+</header>
+<main>
+<div class="grid">
+<div class="card"><h3>Academic</h3><div>University → College → Department → Program → Semester → Subject</div></div>
+<div class="card"><h3>Curriculum</h3><div>Units → Topics → Learning Outcomes → Content</div></div>
+<div class="card"><h3>Student</h3><div>Enrollment → Learning → Assessment → Skills → Evidence</div></div>
+<div class="card"><h3>Placement</h3><div>Readiness → Employers → Hiring Outcomes → Analytics</div></div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h2>Intelligence Flow</h2>
+<div class="flow">
+<div class="node">University</div><div class="node">College</div>
+<div class="node">Department</div><div class="node">Program</div>
+<div class="node">Semester</div><div class="node">Subject</div>
+<div class="node">Curriculum</div><div class="node">Content</div>
+<div class="node">Assessment</div><div class="node">Skills</div>
+<div class="node">Student</div><div class="node">Employer</div>
+<div class="node">Placement</div>
+</div>
+</div>
+
+<div class="card" style="margin-top:24px">
+<h2>Live API Status</h2>
+<div id="status">Checking...</div>
+<button onclick="loadStatus()">Refresh</button>
+<pre id="details"></pre>
+</div>
+</main>
+
+<script>
+async function check(url){
+ try{
+  const r=await fetch(url);
+  return {url,status:r.status,ok:r.ok};
+ }catch(e){return {url,status:"OFFLINE",ok:false}}
+}
+async function loadStatus(){
+ const urls=[
+  "/api/health",
+  "/api/university-os",
+  "/api/university-dashboard",
+  "/api/v2/dashboard"
+ ];
+ const results=await Promise.all(urls.map(check));
+ document.getElementById("status").innerHTML=
+  results.map(x=>`<div class="status">${x.ok?"✓":"✗"} ${x.url} — ${x.status}</div>`).join("");
+ document.getElementById("details").textContent=JSON.stringify(results,null,2);
+}
+loadStatus();
+</script>
+
+<section style="margin-top:24px;padding:22px;border:1px solid #243047;border-radius:16px;background:#0d1424">
+  <h2 style="margin:0 0 6px">V16 LIVE DATABASE INTELLIGENCE</h2>
+  <div id="v16-db-status" style="font-size:13px;opacity:.75;margin-bottom:18px">
+    Connecting to university-os.db...
+  </div>
+
+  <div id="v16-metrics" style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;">
+  </div>
+</section>
+
+<script>
+(async function loadV16Intelligence(){
+  const status = document.getElementById('v16-db-status');
+  const metrics = document.getElementById('v16-metrics');
+
+  try {
+    const r = await fetch('/api/v16/intelligence-summary', {
+      cache: 'no-store'
+    });
+    const data = await r.json();
+
+    if (!r.ok || !data.ok) {
+      throw new Error(data.error || 'V16 API unavailable');
+    }
+
+    const L = data.layers;
+
+    const cards = [
+      ['Academic', L.academic.total, 'Universities ' + L.academic.universities + ' · Colleges ' + L.academic.colleges],
+      ['Curriculum', L.curriculum.total, 'Units ' + L.curriculum.units + ' · Topics ' + L.curriculum.topics],
+      ['Learning Outcomes', L.curriculum.learning_outcomes, 'Verified curriculum outcomes'],
+      ['Content', L.curriculum.content, 'Academic content records'],
+      ['Students', L.student.students, 'Active student intelligence base'],
+      ['Assessments', L.student.assessments, 'Assessment intelligence records'],
+      ['Skills', L.skills.skills, 'Institution skill taxonomy'],
+      ['Skill Evidence', L.skills.evidence, 'Evidence-linked records'],
+      ['Employers', L.placement.employers, 'Employer intelligence'],
+      ['Job Roles', L.placement.job_roles, 'Industry role intelligence'],
+      ['Applications', L.placement.applications, 'Placement applications'],
+      ['Hiring Outcomes', L.placement.hiring_outcomes, 'Outcome intelligence']
+    ];
+
+    metrics.innerHTML = cards.map(x => `
+      <div style="padding:16px;border:1px solid #26334d;border-radius:12px;background:#111a2d">
+        <div style="font-size:12px;opacity:.65">${x[0]}</div>
+        <div style="font-size:28px;font-weight:800;margin:5px 0">${Number(x[1]).toLocaleString()}</div>
+        <div style="font-size:11px;opacity:.55">${x[2]}</div>
+      </div>
+    `).join('');
+
+    status.textContent =
+      '● LIVE · Database connected · Read-only intelligence snapshot · ' +
+      new Date(data.generated_at).toLocaleString();
+
+  } catch (e) {
+    status.textContent = '● ERROR · ' + e.message;
+    status.style.color = '#ff6b6b';
+  }
+})();
+</script>
+
+
+<section style="margin-top:24px;padding:22px;border:1px solid #243047;border-radius:16px;background:#0d1424">
+  <h2 style="margin:0 0 6px">V16 INSTITUTION INTELLIGENCE</h2>
+  <div id="v16-inst-status" style="font-size:13px;opacity:.75;margin-bottom:18px">
+    Loading institutional intelligence...
+  </div>
+
+  <div id="v16-inst-summary" style="
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
+    gap:12px;">
+  </div>
+
+  <div id="v16-inst-list" style="margin-top:18px"></div>
+</section>
+
+<script>
+(async function loadInstitutionIntelligence(){
+  const status = document.getElementById('v16-inst-status');
+  const summary = document.getElementById('v16-inst-summary');
+  const list = document.getElementById('v16-inst-list');
+
+  try {
+    const r = await fetch('/api/v16/institution-intelligence', {
+      cache: 'no-store'
+    });
+    const d = await r.json();
+
+    if (!r.ok || !d.ok) {
+      throw new Error(d.error || 'Institution API unavailable');
+    }
+
+    const A = d.academic || {};
+    const C = d.curriculum || {};
+    const P = d.people || {};
+    const J = d.placement || {};
+
+    const cards = [
+      ['Universities', A.universities || 0],
+      ['Colleges', A.colleges || 0],
+      ['Departments', A.departments || 0],
+      ['Programs', A.programs || 0],
+      ['Subjects', A.subjects || 0],
+      ['Students', P.students || 0],
+      ['Skills', P.skills || 0],
+      ['Employers', J.employers || 0],
+      ['Job Roles', J.job_roles || 0],
+      ['Applications', J.applications || 0],
+      ['Hiring Outcomes', J.hiring_outcomes || 0]
+    ];
+
+    summary.innerHTML = cards.map(([name, value]) => `
+      <div style="padding:15px;border:1px solid #26334d;border-radius:12px;background:#111a2d">
+        <div style="font-size:12px;opacity:.65">${name}</div>
+        <div style="font-size:27px;font-weight:800;margin-top:5px">
+          ${Number(value).toLocaleString()}
+        </div>
+      </div>
+    `).join('');
+
+    if (d.universities && d.universities.length) {
+      list.innerHTML =
+        '<div style="font-weight:700;margin-bottom:8px">Registered Universities</div>' +
+        d.universities.map(u => `
+          <div style="padding:10px 12px;margin:5px 0;border:1px solid #26334d;border-radius:9px">
+            <strong>${u.name || 'Unnamed University'}</strong>
+            <span style="opacity:.6;font-size:12px">
+              ${u.code ? ' · ' + u.code : ''}
+              ${u.city ? ' · ' + u.city : ''}
+              ${u.state ? ', ' + u.state : ''}
+            </span>
+          </div>
+        `).join('');
+    } else {
+      list.innerHTML =
+        '<div style="padding:14px;border:1px dashed #34445f;border-radius:10px;opacity:.7">' +
+        'No university records onboarded yet. V16 is ready for institutional data.' +
+        '</div>';
+    }
+
+    status.textContent =
+      '● LIVE · Institutional intelligence connected · Read-only';
+
+  } catch (e) {
+    status.textContent = '● ERROR · ' + e.message;
+  }
+})();
+</script>
+
+</body>
+</html>

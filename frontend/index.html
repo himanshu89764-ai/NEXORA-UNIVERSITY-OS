@@ -1,0 +1,2782 @@
+<!doctype html>
+
+
+<html lang="en">
+
+
+<head>
+
+
+<meta charset="UTF-8">
+
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+
+<title>NEXORA University OS</title>
+
+
+<style>
+
+
+*{box-sizing:border-box}
+
+
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f5f7fb;color:#172033}
+
+
+header{background:#111827;color:white;padding:22px 30px}
+
+
+header h1{margin:0;font-size:25px}
+
+
+header p{margin:7px 0 0;color:#cbd5e1}
+
+
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:14px 30px;background:white;border-bottom:1px solid #e5e7eb}
+
+
+nav button{border:0;background:#eef2f7;padding:10px 15px;border-radius:9px;cursor:pointer}
+
+
+nav button.active{background:#111827;color:white}
+
+
+main{max-width:1250px;margin:auto;padding:28px}
+
+
+.page{display:none}.page.active{display:block}
+
+
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+
+
+.card,.panel{background:white;border:1px solid #e7eaf0;border-radius:15px;padding:20px;box-shadow:0 3px 16px #0000000a}
+
+
+.panel{margin-top:20px}
+
+
+.label{font-size:14px;color:#697386}.number{font-size:30px;font-weight:700;margin-top:8px}
+
+
+input,select{padding:11px;border:1px solid #d5dbe5;border-radius:9px;width:100%;margin:6px 0}
+
+
+button.primary{background:#111827;color:white;border:0;padding:11px 16px;border-radius:9px;cursor:pointer}
+
+
+button.secondary{background:#eef2f7;border:0;padding:11px 16px;border-radius:9px;cursor:pointer}
+
+
+.formgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+
+
+.status{padding:12px;border-radius:10px;background:#f0fdf4;margin-bottom:20px}
+
+
+.error{background:#fef2f2;color:#991b1b}.success{background:#f0fdf4;color:#166534}
+
+
+table{width:100%;border-collapse:collapse;margin-top:12px}
+
+
+th,td{text-align:left;padding:10px;border-bottom:1px solid #edf0f3}
+
+
+.badge{display:inline-block;background:#eef2ff;padding:5px 9px;border-radius:8px}
+
+
+.hidden{display:none}
+
+
+</style>
+
+
+</head>
+
+
+
+
+
+<body>
+
+
+<header>
+
+
+<h1>NEXORA University OS</h1>
+
+
+<p>Academic Intelligence • Skills • Assessment • Placement</p>
+
+
+</header>
+
+
+
+
+
+<nav>
+
+
+<button class="active" onclick="showPage('overview',this)">Overview</button>
+
+
+<button onclick="showPage('onboarding',this)">Onboarding</button>
+
+
+<button onclick="showPage('login',this)">Login</button>
+
+
+<button onclick="showPage('academic',this)">Academic</button>
+
+
+<button onclick="showPage('students',this)">Students</button>
+
+
+<button onclick="showPage('faculty',this)">Faculty</button>
+
+
+<button onclick="showPage('placement',this)">Placement</button>
+
+
+<button onclick="showPage('skills',this)">Skills</button>
+
+
+</nav>
+
+
+
+
+
+<main>
+
+
+
+
+
+<section id="overview" class="page active">
+
+
+<h2>Institutional Overview</h2>
+
+
+<div class="status" id="systemStatus">Checking University OS...</div>
+
+
+
+
+
+<div class="panel">
+
+
+<h3>Current Workspace</h3>
+
+
+<div id="currentUser">Not logged in</div>
+
+
+<button class="secondary" onclick="showPage('login')">Open Login</button>
+
+
+</div>
+
+
+
+
+
+<div class="grid" id="dashboardCards" style="margin-top:20px"></div>
+
+
+
+
+
+<div class="panel">
+
+
+<h3>University Intelligence Layer</h3>
+
+
+<p>
+
+
+University → College → Department → Program → Semester → Subject
+
+
+is connected with Skills → Assessments → Placement Intelligence.
+
+
+</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section id="onboarding" class="page">
+
+
+<h2>Institution Onboarding</h2>
+
+
+
+
+
+<div class="panel">
+
+
+<h3>Step 1 — Create Institution</h3>
+
+
+<div class="formgrid">
+
+
+<div><label>Institution Name</label><input id="instName" placeholder="Example University"></div>
+
+
+<div><label>Institution Code</label><input id="instCode" placeholder="EXU"></div>
+
+
+<div><label>Type</label>
+
+
+<select id="instType">
+
+
+<option value="university">University</option>
+
+
+<option value="college">College</option>
+
+
+<option value="institute">Institute</option>
+
+
+</select>
+
+
+</div>
+
+
+<div><label>City</label><input id="instCity" placeholder="City"></div>
+
+
+<div><label>State</label><input id="instState" placeholder="State"></div>
+
+
+</div>
+
+
+<br>
+
+
+<button id="createInstitutionBtn" class="primary" type="button">Create Institution</button>
+
+
+<div id="instResult"></div>
+
+
+</div>
+
+
+
+
+
+<div class="panel">
+
+
+<h3>Step 2 — Create Institutional User</h3>
+
+
+<div class="formgrid">
+
+
+<div><label>Institution ID</label><input id="userInstId" type="number" placeholder="Created institution ID"></div>
+
+
+<div><label>Name</label><input id="userName" placeholder="Administrator name"></div>
+
+
+<div><label>Email</label><input id="userEmail" type="email" placeholder="admin@example.edu"></div>
+
+
+<div><label>Role</label>
+
+
+<select id="userRole">
+
+
+<option>UNIVERSITY_ADMIN</option>
+
+
+<option>DEAN</option>
+
+
+<option>HOD</option>
+
+
+<option>FACULTY</option>
+
+
+<option>TPO</option>
+
+
+<option>STUDENT</option>
+
+
+</select>
+
+
+</div>
+
+
+</div>
+
+
+<br>
+
+
+<button class="primary" onclick="createUser()">Create User</button>
+
+
+<div id="userResult"></div>
+
+
+</div>
+
+
+
+
+
+<div class="panel">
+
+
+<h3>Step 3 — Set Password</h3>
+
+
+<div class="formgrid">
+
+
+<div><label>User ID</label><input id="passwordUserId" type="number" placeholder="Created user ID"></div>
+
+
+<div><label>Password</label><input id="password" type="password" placeholder="Minimum 8 characters"></div>
+
+
+</div>
+
+
+<br>
+
+
+<button class="primary" onclick="setPassword()">Set Secure Password</button>
+
+
+<div id="passwordResult"></div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section id="login" class="page">
+
+
+<h2>Institution Login</h2>
+
+
+<div class="panel" style="max-width:600px">
+
+
+<label>Institution ID</label>
+
+
+<input id="loginInstitutionId" type="number" placeholder="Institution ID">
+
+
+
+
+
+<label>Email</label>
+
+
+<input id="loginEmail" type="email" placeholder="Email">
+
+
+
+
+
+<label>Password</label>
+
+
+<input id="loginPassword" type="password" placeholder="Password">
+
+
+
+
+
+<br>
+
+
+<button class="primary" onclick="login()">Login</button>
+
+
+<button class="secondary" onclick="logout()">Logout</button>
+
+
+<div id="loginResult"></div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section id="academic" class="page">
+
+
+<h2>Academic Structure</h2>
+
+
+<div class="grid" id="academicCards"></div>
+
+
+<div class="panel">
+
+
+<h3>Academic Hierarchy</h3>
+
+
+<div id="academicTree">Loading...</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section id="students" class="page">
+
+
+<h2>Student Intelligence</h2>
+
+
+<div class="grid">
+
+
+<div class="card"><div class="label">Students</div><div class="number" id="studentCount">0</div></div>
+
+
+<div class="card"><div class="label">Skill Evidence</div><div class="number" id="evidenceCount">0</div></div>
+
+
+<div class="card"><div class="label">Career Goals</div><div class="number" id="goalCount">0</div></div>
+
+
+</div>
+
+
+<div class="panel">
+
+
+<h3>Skill Passport</h3>
+
+
+<p>Evidence-backed student skill profiles and career goals.</p>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section id="faculty" class="page">
+
+
+<h2>Faculty Workspace</h2>
+
+
+<div class="grid">
+
+
+<div class="card"><div class="label">Programs</div><div class="number" id="facultyPrograms">0</div></div>
+
+
+<div class="card"><div class="label">Subjects</div><div class="number" id="facultySubjects">0</div></div>
+
+
+<div class="card"><div class="label">Assessments</div><div class="number" id="assessmentCount">0</div></div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section id="placement" class="page">
+
+
+<h2>Placement Intelligence</h2>
+
+
+<div class="grid">
+
+
+<div class="card"><div class="label">Employers</div><div class="number" id="employerCount">0</div></div>
+
+
+<div class="card"><div class="label">Readiness Records</div><div class="number" id="readinessCount">0</div></div>
+
+
+<div class="card"><div class="label">Average Readiness</div><div class="number" id="readinessAvg">0%</div></div>
+
+
+<div class="card"><div class="label">Skill Gaps</div><div class="number" id="skillGaps">0</div></div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+<section id="skills" class="page">
+
+
+<h2>Skill Intelligence</h2>
+
+
+<div class="panel">
+
+
+<h3>Institutional Skill Summary</h3>
+
+
+<div id="skillTable">Loading...</div>
+
+
+</div>
+
+
+</section>
+
+
+
+
+
+</main>
+
+
+
+
+
+<script>
+
+
+const $=id=>document.getElementById(id);
+
+
+let authToken=localStorage.getItem('nexora_university_token')||'';
+
+
+
+
+
+function showPage(id,button){
+
+
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+
+
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+
+
+ $(id).classList.add('active');
+
+
+ if(button) button.classList.add('active');
+
+
+}
+
+
+
+
+
+async function getJSON(url,options={}){
+
+
+ const headers=options.headers||{};
+
+
+ if(authToken) headers.Authorization='Bearer '+authToken;
+
+
+ options.headers=headers;
+
+
+ const r=await fetch(url,options);
+
+
+ const d=await r.json().catch(()=>({}));
+
+
+ if(!r.ok) throw new Error(d.error||'Request failed');
+
+
+ return d;
+
+
+}
+
+
+
+
+
+function result(id,message,ok=true){
+
+
+ const el=$(id);
+
+
+ el.className='status '+(ok?'success':'error');
+
+
+ el.textContent=message;
+
+
+}
+
+
+
+
+
+async function createInstitution(){
+
+  try{
+
+    const nameEl=document.querySelector('#instName');
+
+    const codeEl=document.querySelector('#instCode');
+
+    const typeEl=document.querySelector('#instType');
+
+    const cityEl=document.querySelector('#instCity');
+
+    const stateEl=document.querySelector('#instState');
+
+
+
+    let name=(nameEl?.value || '').trim();
+
+
+
+    if(!name){
+
+      name=window.prompt('Enter Institution Name:','NEXORA Demo University');
+
+      if(name===null) return;
+
+      name=String(name).trim();
+
+    }
+
+
+
+    if(!name){
+
+      result('instResult','Please enter Institution Name',false);
+
+      return;
+
+    }
+
+
+
+    const payload={
+
+      name:name,
+
+      code:String(codeEl?.value || '').trim() || null,
+
+      type:String(typeEl?.value || 'university').trim() || 'university',
+
+      city:String(cityEl?.value || '').trim(),
+
+      state:String(stateEl?.value || '').trim(),
+
+      country:'India'
+
+    };
+
+
+
+    console.log('NEXORA V9 FINAL INSTITUTION PAYLOAD:',payload);
+
+
+
+    const response=await fetch('/api/v7/institution?nocache='+Date.now(),{
+
+      method:'POST',
+
+      cache:'no-store',
+
+      headers:{
+
+        'Content-Type':'application/json',
+
+        'Accept':'application/json',
+
+        'Cache-Control':'no-cache'
+
+      },
+
+      body:JSON.stringify(payload)
+
+    });
+
+
+
+    const data=await response.json().catch(()=>({}));
+
+
+
+    if(!response.ok){
+
+      throw new Error(data.error || ('Institution creation failed: HTTP '+response.status));
+
+    }
+
+
+
+    if(!data.institution || !data.institution.id){
+
+      throw new Error('Institution created but server returned no institution ID');
+
+    }
+
+
+
+    const id=data.institution.id;
+
+
+
+    const userInst=document.querySelector('#userInstId');
+
+    const loginInst=document.querySelector('#loginInstitutionId');
+
+
+
+    if(userInst) userInst.value=id;
+
+    if(loginInst) loginInst.value=id;
+
+
+
+    result(
+
+      'instResult',
+
+      'Institution created successfully. ID: '+id,
+
+      true
+
+    );
+
+
+
+    console.log('NEXORA V9 INSTITUTION CREATED:',data.institution);
+
+
+
+  }catch(e){
+
+    console.error('NEXORA V9 FINAL CREATE INSTITUTION ERROR:',e);
+
+    result('instResult',e.message || 'Institution creation failed',false);
+
+  }
+
+}
+
+
+async function createUser(){
+
+
+ try{
+
+
+  const d=await getJSON('/api/v7/user',{
+
+
+   method:'POST',
+
+
+   headers:{'Content-Type':'application/json'},
+
+
+   body:JSON.stringify({
+
+
+    institutionId:Number($('userInstId').value),
+
+
+    name:$('userName').value,
+
+
+    email:$('userEmail').value,
+
+
+    role:$('userRole').value
+
+
+   })
+
+
+  });
+
+
+
+
+
+  $('passwordUserId').value=d.user.id;
+
+
+  $('loginEmail').value=d.user.email;
+
+
+
+
+
+  result(
+
+
+   'userResult',
+
+
+   'User created successfully. User ID: '+d.user.id
+
+
+  );
+
+
+ }catch(e){result('userResult',e.message,false)}
+
+
+}
+
+
+
+
+
+async function setPassword(){
+
+
+ try{
+
+
+  const d=await getJSON('/api/v8/set-password',{
+
+
+   method:'POST',
+
+
+   headers:{'Content-Type':'application/json'},
+
+
+   body:JSON.stringify({
+
+
+    userId:Number($('passwordUserId').value),
+
+
+    password:$('password').value
+
+
+   })
+
+
+  });
+
+
+
+
+
+  result('passwordResult',d.message||'Password configured securely');
+
+
+ }catch(e){result('passwordResult',e.message,false)}
+
+
+}
+
+
+
+
+
+async function login(){
+
+
+ try{
+
+
+  const d=await getJSON('/api/v8/login',{
+
+
+   method:'POST',
+
+
+   headers:{'Content-Type':'application/json'},
+
+
+   body:JSON.stringify({
+
+
+    institutionId:Number($('loginInstitutionId').value),
+
+
+    email:$('loginEmail').value,
+
+
+    password:$('loginPassword').value
+
+
+   })
+
+
+  });
+
+
+
+
+
+  authToken=d.token;
+
+
+  localStorage.setItem('nexora_university_token',authToken);
+
+
+
+
+
+  $('currentUser').innerHTML=
+
+
+   '<strong>'+d.user.name+'</strong> · '+
+
+
+   '<span class="badge">'+d.user.role+'</span>'+
+
+
+   '<br>Institution ID: '+d.user.institutionId+
+
+
+   '<br><small>'+d.user.email+'</small>';
+
+
+
+
+
+  result('loginResult','Login successful — '+d.user.role);
+
+
+ }catch(e){result('loginResult',e.message,false)}
+
+
+}
+
+
+
+
+
+async function logout(){
+
+
+ try{
+
+
+  if(authToken){
+
+
+   await getJSON('/api/v8/logout',{method:'POST'});
+
+
+  }
+
+
+ }catch(e){}
+
+
+ authToken='';
+
+
+ localStorage.removeItem('nexora_university_token');
+
+
+ $('currentUser').textContent='Not logged in';
+
+
+ $('loginResult').className='status';
+
+
+ $('loginResult').textContent='Logged out';
+
+
+}
+
+
+
+
+
+async function loadDashboard(){
+
+
+ try{
+
+
+  const d=await getJSON('/api/v2/dashboard');
+
+
+  const x=d.institution||d;
+
+
+
+
+
+  $('systemStatus').textContent='NEXORA University OS — Institutional Database ONLINE';
+
+
+
+
+
+  const labels={
+
+
+   universities:'Universities',colleges:'Colleges',
+
+
+   departments:'Departments',programs:'Programs',
+
+
+   semesters:'Semesters',subjects:'Subjects',
+
+
+   students:'Students',skills:'Skills',employers:'Employers'
+
+
+  };
+
+
+
+
+
+  $('dashboardCards').innerHTML=Object.entries(labels).map(([k,v])=>
+
+
+   '<div class="card"><div class="label">'+v+
+
+
+   '</div><div class="number">'+(x[k]||0)+'</div></div>'
+
+
+  ).join('');
+
+
+
+
+
+  $('academicCards').innerHTML=
+
+
+   ['universities','colleges','departments','programs','semesters','subjects']
+
+
+   .map(k=>'<div class="card"><div class="label">'+labels[k]+
+
+
+   '</div><div class="number">'+(x[k]||0)+'</div></div>').join('');
+
+
+
+
+
+  $('studentCount').textContent=x.students||0;
+
+
+  $('facultyPrograms').textContent=x.programs||0;
+
+
+  $('facultySubjects').textContent=x.subjects||0;
+
+
+  $('employerCount').textContent=x.employers||0;
+
+
+ }catch(e){
+
+
+  $('systemStatus').textContent='NEXORA University OS API offline';
+
+
+ }
+
+
+}
+
+
+
+
+
+async function loadAcademic(){
+
+
+ try{
+
+
+  const d=await getJSON('/api/v3/academic-tree');
+
+
+  const rows=d.data||[];
+
+
+
+
+
+  if(!rows.length){
+
+
+   $('academicTree').innerHTML='<p>No academic structure added yet.</p>';
+
+
+   return;
+
+
+  }
+
+
+
+
+
+  $('academicTree').innerHTML=
+
+
+   '<table><tr><th>University</th><th>College</th><th>Department</th><th>Program</th><th>Semester</th><th>Subject</th></tr>'+
+
+
+   rows.map(r=>'<tr><td>'+(r.university_name||'—')+
+
+
+   '</td><td>'+(r.college_name||'—')+
+
+
+   '</td><td>'+(r.department_name||'—')+
+
+
+   '</td><td>'+(r.program_name||'—')+
+
+
+   '</td><td>'+(r.semester_number||'—')+
+
+
+   '</td><td>'+(r.subject_name||'—')+'</td></tr>').join('')+
+
+
+   '</table>';
+
+
+ }catch(e){
+
+
+  $('academicTree').textContent='Academic API unavailable';
+
+
+ }
+
+
+}
+
+
+
+
+
+async function loadIntelligence(){
+
+
+ try{
+
+
+  const a=await getJSON('/api/v5/assessment-summary');
+
+
+  const x=a.summary||{};
+
+
+  $('assessmentCount').textContent=x.total_attempts||0;
+
+
+ }catch(e){}
+
+
+
+
+
+ try{
+
+
+  const p=await getJSON('/api/v5/placement-summary');
+
+
+  const x=p.summary||{};
+
+
+  $('readinessCount').textContent=x.readiness_records||0;
+
+
+  $('readinessAvg').textContent=(x.average_readiness||0)+'%';
+
+
+  $('skillGaps').textContent=x.total_skill_gaps||0;
+
+
+ }catch(e){}
+
+
+
+
+
+ try{
+
+
+  const s=await getJSON('/api/v4/skill-summary');
+
+
+  const rows=s.summary||[];
+
+
+
+
+
+  $('skillTable').innerHTML=rows.length
+
+
+   ? '<table><tr><th>Category</th><th>Students</th><th>Average Level</th><th>Evidence</th></tr>'+
+
+
+     rows.map(r=>'<tr><td><span class="badge">'+
+
+
+     (r.category||'General')+'</span></td><td>'+
+
+
+     (r.students||0)+'</td><td>'+
+
+
+     (r.average_level||0)+'/5</td><td>'+
+
+
+     (r.evidence||0)+'</td></tr>').join('')+
+
+
+     '</table>'
+
+
+   : '<p>No skill data yet.</p>';
+
+
+ }catch(e){}
+
+
+}
+
+
+
+
+
+async function restoreSession(){
+
+
+ if(!authToken) return;
+
+
+
+
+
+ try{
+
+
+  const d=await getJSON('/api/v8/me');
+
+
+  $('currentUser').innerHTML=
+
+
+   '<strong>'+d.user.name+'</strong> · '+
+
+
+   '<span class="badge">'+d.user.role+'</span>'+
+
+
+   '<br>Institution ID: '+d.user.institutionId+
+
+
+   '<br><small>'+d.user.email+'</small>';
+
+
+ }catch(e){
+
+
+  authToken='';
+
+
+  localStorage.removeItem('nexora_university_token');
+
+
+ }
+
+
+}
+
+
+
+
+
+loadDashboard();
+
+
+loadAcademic();
+
+
+loadIntelligence();
+
+
+restoreSession();
+
+
+
+// NEXORA V9 DIRECT BUTTON HANDLER
+document.addEventListener('DOMContentLoaded',()=>{
+  const btn=document.getElementById('createInstitutionBtn');
+
+  if(!btn) return;
+
+  btn.onclick=async()=>{
+    const name=document.getElementById('instName')?.value?.trim() || '';
+    const code=document.getElementById('instCode')?.value?.trim() || '';
+    const type=document.getElementById('instType')?.value || 'university';
+    const city=document.getElementById('instCity')?.value?.trim() || '';
+    const state=document.getElementById('instState')?.value?.trim() || '';
+
+    console.log('NEXORA V9 DIRECT BUTTON VALUE:',name);
+
+    if(!name){
+      alert('Institution Name field is empty. Please type the institution name first.');
+      document.getElementById('instName')?.focus();
+      return;
+    }
+
+    try{
+      btn.disabled=true;
+      btn.textContent='Creating...';
+
+      const r=await fetch('/api/v7/institution?v='+Date.now(),{
+        method:'POST',
+        cache:'no-store',
+        headers:{
+          'Content-Type':'application/json',
+          'Accept':'application/json'
+        },
+        body:JSON.stringify({
+          name:name,
+          code:code || null,
+          type:type,
+          city:city,
+          state:state,
+          country:'India'
+        })
+      });
+
+      const d=await r.json().catch(()=>({}));
+
+      if(!r.ok) throw new Error(d.error || ('HTTP '+r.status));
+
+      const id=d.institution?.id;
+      if(!id) throw new Error('Server returned no Institution ID');
+
+      const u=document.getElementById('userInstId');
+      const l=document.getElementById('loginInstitutionId');
+
+      if(u) u.value=id;
+      if(l) l.value=id;
+
+      const box=document.getElementById('instResult');
+      if(box){
+        box.textContent='Institution created successfully. ID: '+id;
+        box.style.color='green';
+      }
+
+      console.log('NEXORA V9 DIRECT CREATION SUCCESS:',d);
+
+    }catch(e){
+      console.error('NEXORA V9 DIRECT CREATION ERROR:',e);
+      const box=document.getElementById('instResult');
+      if(box){
+        box.textContent=e.message || 'Institution creation failed';
+        box.style.color='red';
+      }
+    }finally{
+      btn.disabled=false;
+      btn.textContent='Create Institution';
+    }
+  };
+});
+
+</script>
+
+
+
+<!-- NEXORA V10 ACADEMIC UI -->
+<section id="v10AcademicSetup" style="margin-top:24px;">
+  <div style="background:#fff;border:1px solid #ddd;border-radius:14px;padding:22px;">
+    <h2 style="margin:0 0 6px;">Academic Setup</h2>
+    <p style="margin:0 0 20px;color:#666;">
+      University → College → Department → Program → Semester → Subject
+    </p>
+
+    <input id="v10InstitutionId" type="hidden" value="1">
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+
+      <div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+        <h3>1. College</h3>
+        <input id="v10CollegeName" placeholder="College Name" style="width:100%;padding:10px;margin:5px 0;">
+        <input id="v10CollegeCode" placeholder="College Code" style="width:100%;padding:10px;margin:5px 0;">
+        <input id="v10CollegeCity" placeholder="City" style="width:100%;padding:10px;margin:5px 0;">
+        <button onclick="v10CreateCollege()" class="primary">Create College</button>
+      </div>
+
+      <div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+        <h3>2. Department</h3>
+        <select id="v10CollegeSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+        <input id="v10DepartmentName" placeholder="Department Name" style="width:100%;padding:10px;margin:5px 0;">
+        <input id="v10DepartmentCode" placeholder="Department Code" style="width:100%;padding:10px;margin:5px 0;">
+        <button onclick="v10CreateDepartment()" class="primary">Create Department</button>
+      </div>
+
+      <div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+        <h3>3. Program</h3>
+        <select id="v10DepartmentSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+        <input id="v10ProgramName" placeholder="Program Name (B.Tech CSE)" style="width:100%;padding:10px;margin:5px 0;">
+        <input id="v10ProgramCode" placeholder="Program Code" style="width:100%;padding:10px;margin:5px 0;">
+        <input id="v10ProgramDuration" type="number" min="1" max="10" value="4" placeholder="Duration Years" style="width:100%;padding:10px;margin:5px 0;">
+        <button onclick="v10CreateProgram()" class="primary">Create Program</button>
+      </div>
+
+      <div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+        <h3>4. Semester</h3>
+        <select id="v10ProgramSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+        <input id="v10SemesterNumber" type="number" min="1" max="20" placeholder="Semester Number" style="width:100%;padding:10px;margin:5px 0;">
+        <button onclick="v10CreateSemester()" class="primary">Create Semester</button>
+      </div>
+
+      <div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+        <h3>5. Subject</h3>
+        <select id="v10SemesterSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+        <input id="v10SubjectName" placeholder="Subject Name" style="width:100%;padding:10px;margin:5px 0;">
+        <input id="v10SubjectCode" placeholder="Subject Code" style="width:100%;padding:10px;margin:5px 0;">
+        <input id="v10SubjectCredits" type="number" min="0" max="20" placeholder="Credits" style="width:100%;padding:10px;margin:5px 0;">
+        <button onclick="v10CreateSubject()" class="primary">Create Subject</button>
+      </div>
+
+    </div>
+
+    <div id="v10AcademicMessage" style="margin-top:18px;padding:10px;border-radius:8px;"></div>
+
+    <div style="margin-top:22px;border-top:1px solid #eee;padding-top:18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <h3 style="margin:0;">Academic Tree</h3>
+        <button onclick="v10LoadTree()">Refresh Tree</button>
+      </div>
+      <div id="v10AcademicTree" style="margin-top:14px;"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  if(window.__NEXORA_V10_ACADEMIC_UI__) return;
+  window.__NEXORA_V10_ACADEMIC_UI__ = true;
+
+  function institutionId(){
+    return Number(
+      document.getElementById('v10InstitutionId')?.value ||
+      document.getElementById('loginInstitutionId')?.value ||
+      localStorage.getItem('nexora_university_institution_id') ||
+      1
+    );
+  }
+
+  function msg(text, ok=true){
+    const el=document.getElementById('v10AcademicMessage');
+    if(el){
+      el.textContent=text;
+      el.style.background=ok ? '#eefbf1' : '#fff1f1';
+      el.style.color=ok ? '#176b2c' : '#a11';
+    }
+  }
+
+  async function post(url, body){
+    const r=await fetch(url,{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Cache-Control':'no-cache'},
+      body:JSON.stringify(body)
+    });
+    const d=await r.json().catch(()=>({success:false,error:'Invalid server response'}));
+    if(!r.ok || d.success===false) throw new Error(d.error || 'Request failed');
+    return d;
+  }
+
+  function fill(id, items, labelFn){
+    const el=document.getElementById(id);
+    if(!el) return;
+    el.innerHTML = items.length
+      ? items.map(x=>`<option value="${x.id}">${labelFn(x)}</option>`).join('')
+      : '<option value="">No data yet</option>';
+  }
+
+  function esc(v){
+    return String(v ?? '').replace(/[&<>"']/g,m=>({
+      '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+    }[m]));
+  }
+
+  window.v10LoadTree = async function(){
+    try{
+      const id=institutionId();
+      const r=await fetch('/api/v10/academic/'+id+'?v='+Date.now(),{
+        cache:'no-store'
+      });
+      const d=await r.json();
+      if(!r.ok || d.success===false) throw new Error(d.error || 'Academic tree failed');
+
+      const t=d.tree || {};
+      const colleges=t.colleges||[];
+      const departments=t.departments||[];
+      const programs=t.programs||[];
+      const semesters=t.semesters||[];
+      const subjects=t.subjects||[];
+
+      fill('v10CollegeSelect',colleges,x=>esc(x.name));
+      fill('v10DepartmentSelect',departments,x=>esc(x.name));
+      fill('v10ProgramSelect',programs,x=>esc(x.name+' ('+x.code+')'));
+      fill('v10SemesterSelect',semesters,x=>'Semester '+x.semester_number);
+
+      const root=document.getElementById('v10AcademicTree');
+
+      if(!colleges.length){
+        root.innerHTML='<div style="padding:16px;color:#777;">No academic structure yet. Create your first College.</div>';
+        return;
+      }
+
+      root.innerHTML=colleges.map(c=>{
+        const deps=departments.filter(d=>d.college_id===c.id);
+        return `
+          <div style="margin:10px 0;padding:14px;border-left:4px solid #555;background:#fafafa;border-radius:8px;">
+            <strong>College: ${esc(c.name)}</strong>
+            ${c.code ? ' · '+esc(c.code) : ''}
+            ${deps.map(dep=>{
+              const progs=programs.filter(p=>p.department_id===dep.id);
+              return `
+                <div style="margin:10px 0 0 18px;padding:10px;border-left:3px solid #aaa;">
+                  <strong>Department: ${esc(dep.name)}</strong>
+                  ${dep.code ? ' · '+esc(dep.code) : ''}
+                  ${progs.map(prog=>{
+                    const sems=semesters.filter(s=>s.program_id===prog.id);
+                    return `
+                      <div style="margin:8px 0 0 18px;">
+                        <strong>Program: ${esc(prog.name)}</strong>
+                        ${prog.code ? ' · '+esc(prog.code) : ''}
+                        ${sems.map(sem=>{
+                          const subs=subjects.filter(s=>s.semester_id===sem.id);
+                          return `
+                            <div style="margin:7px 0 0 18px;">
+                              <strong>Semester ${esc(sem.semester_number)}</strong>
+                              ${subs.length
+                                ? '<ul style="margin:5px 0 0 20px;">'+subs.map(sub=>
+                                    `<li>${esc(sub.name)}${sub.code?' · '+esc(sub.code):''}${sub.credits!=null?' · '+esc(sub.credits)+' credits':''}</li>`
+                                  ).join('')+'</ul>'
+                                : '<div style="color:#999;margin-left:18px;">No subjects</div>'
+                              }
+                            </div>`;
+                        }).join('')}
+                      </div>`;
+                  }).join('')}
+                </div>`;
+            }).join('')}
+          </div>`;
+      }).join('');
+    }catch(e){
+      msg(e.message,false);
+    }
+  };
+
+  window.v10CreateCollege = async function(){
+    try{
+      const name=document.getElementById('v10CollegeName').value.trim();
+      if(!name) throw new Error('College name is required');
+      await post('/api/v10/college',{
+        institutionId:institutionId(),
+        name,
+        code:document.getElementById('v10CollegeCode').value.trim(),
+        city:document.getElementById('v10CollegeCity').value.trim()
+      });
+      msg('College created successfully.');
+      document.getElementById('v10CollegeName').value='';
+      await v10LoadTree();
+    }catch(e){msg(e.message,false);}
+  };
+
+  window.v10CreateDepartment = async function(){
+    try{
+      const collegeId=Number(document.getElementById('v10CollegeSelect').value);
+      const name=document.getElementById('v10DepartmentName').value.trim();
+      if(!collegeId) throw new Error('Select College');
+      if(!name) throw new Error('Department name is required');
+      await post('/api/v10/department',{
+        institutionId:institutionId(),collegeId,name,
+        code:document.getElementById('v10DepartmentCode').value.trim()
+      });
+      msg('Department created successfully.');
+      document.getElementById('v10DepartmentName').value='';
+      await v10LoadTree();
+    }catch(e){msg(e.message,false);}
+  };
+
+  window.v10CreateProgram = async function(){
+    try{
+      const departmentId=Number(document.getElementById('v10DepartmentSelect').value);
+      const name=document.getElementById('v10ProgramName').value.trim();
+      if(!departmentId) throw new Error('Select Department');
+      if(!name) throw new Error('Program name is required');
+      await post('/api/v10/program',{
+        institutionId:institutionId(),departmentId,name,
+        code:document.getElementById('v10ProgramCode').value.trim(),
+        durationYears:Number(document.getElementById('v10ProgramDuration').value)||4
+      });
+      msg('Program created successfully.');
+      document.getElementById('v10ProgramName').value='';
+      await v10LoadTree();
+    }catch(e){msg(e.message,false);}
+  };
+
+  window.v10CreateSemester = async function(){
+    try{
+      const programId=Number(document.getElementById('v10ProgramSelect').value);
+      const semesterNumber=Number(document.getElementById('v10SemesterNumber').value);
+      if(!programId) throw new Error('Select Program');
+      if(!semesterNumber) throw new Error('Semester number is required');
+      await post('/api/v10/semester',{
+        institutionId:institutionId(),programId,semesterNumber
+      });
+      msg('Semester created successfully.');
+      document.getElementById('v10SemesterNumber').value='';
+      await v10LoadTree();
+    }catch(e){msg(e.message,false);}
+  };
+
+  window.v10CreateSubject = async function(){
+    try{
+      const semesterId=Number(document.getElementById('v10SemesterSelect').value);
+      const name=document.getElementById('v10SubjectName').value.trim();
+      if(!semesterId) throw new Error('Select Semester');
+      if(!name) throw new Error('Subject name is required');
+      await post('/api/v10/subject',{
+        institutionId:institutionId(),semesterId,name,
+        code:document.getElementById('v10SubjectCode').value.trim(),
+        credits:Number(document.getElementById('v10SubjectCredits').value)||0
+      });
+      msg('Subject created successfully.');
+      document.getElementById('v10SubjectName').value='';
+      await v10LoadTree();
+    }catch(e){msg(e.message,false);}
+  };
+
+  document.addEventListener('DOMContentLoaded',()=>{
+    setTimeout(v10LoadTree,300);
+  });
+})();
+</script>
+<!-- NEXORA V10 ACADEMIC UI -->
+
+
+<!-- NEXORA V11 CURRICULUM UI -->
+<section id="v11CurriculumUI" style="margin-top:24px;">
+<div style="background:#fff;border:1px solid #ddd;border-radius:14px;padding:22px;">
+<h2 style="margin:0 0 6px;">Curriculum Intelligence</h2>
+<p style="color:#666;margin:0 0 20px;">Subject → Unit → Topic → Learning Outcome</p>
+
+<input id="v11InstitutionId" type="hidden" value="1">
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;">
+
+<div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+<h3>1. Unit</h3>
+<select id="v11SubjectSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+<input id="v11UnitNumber" type="number" min="1" placeholder="Unit Number" style="width:100%;padding:10px;margin:5px 0;">
+<input id="v11UnitName" placeholder="Unit Name" style="width:100%;padding:10px;margin:5px 0;">
+<textarea id="v11UnitDescription" placeholder="Unit Description" style="width:100%;padding:10px;margin:5px 0;"></textarea>
+<button onclick="v11CreateUnit()" class="primary">Create Unit</button>
+</div>
+
+<div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+<h3>2. Topic</h3>
+<select id="v11UnitSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+<input id="v11TopicNumber" type="number" min="1" placeholder="Topic Number" style="width:100%;padding:10px;margin:5px 0;">
+<input id="v11TopicName" placeholder="Topic Name" style="width:100%;padding:10px;margin:5px 0;">
+<textarea id="v11TopicDescription" placeholder="Topic Description" style="width:100%;padding:10px;margin:5px 0;"></textarea>
+<button onclick="v11CreateTopic()" class="primary">Create Topic</button>
+</div>
+
+<div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+<h3>3. Learning Outcome</h3>
+<select id="v11TopicSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+<textarea id="v11Outcome" placeholder="Example: Explain the fundamental concepts..." style="width:100%;padding:10px;margin:5px 0;"></textarea>
+<button onclick="v11CreateOutcome()" class="primary">Add Learning Outcome</button>
+</div>
+
+</div>
+
+<div id="v11Message" style="margin-top:18px;padding:10px;border-radius:8px;"></div>
+
+<div style="margin-top:22px;border-top:1px solid #eee;padding-top:18px;">
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<h3 style="margin:0;">Curriculum Tree</h3>
+<button onclick="v11LoadAll()">Refresh</button>
+</div>
+<div id="v11Tree" style="margin-top:14px;"></div>
+</div>
+</div>
+</section>
+
+<script>
+(function(){
+if(window.__NEXORA_V11_CURRICULUM_UI__) return;
+window.__NEXORA_V11_CURRICULUM_UI__=true;
+
+let v11Data={subjects:[],units:[],topics:[],learningOutcomes:[]};
+
+function iid(){
+return Number(
+document.getElementById('v11InstitutionId')?.value ||
+document.getElementById('loginInstitutionId')?.value || 1
+);
+}
+
+function message(t,ok=true){
+const e=document.getElementById('v11Message');
+if(e){
+e.textContent=t;
+e.style.background=ok?'#eefbf1':'#fff1f1';
+e.style.color=ok?'#176b2c':'#a11';
+}
+}
+
+function esc(v){
+return String(v??'').replace(/[&<>"']/g,m=>({
+'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+}[m]));
+}
+
+async function post(url,body){
+const r=await fetch(url,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify(body)
+});
+const d=await r.json().catch(()=>({success:false,error:'Invalid response'}));
+if(!r.ok||d.success===false) throw new Error(d.error||'Request failed');
+return d;
+}
+
+function fill(id,items,label){
+const e=document.getElementById(id);
+if(!e)return;
+e.innerHTML=items.length
+?items.map(x=>`<option value="${x.id}">${label(x)}</option>`).join('')
+:'<option value="">No data available</option>';
+}
+
+window.v11LoadAll=async function(){
+try{
+const [cr,ac]=await Promise.all([
+fetch('/api/v11/curriculum/'+iid()+'?v='+Date.now(),{cache:'no-store'}),
+fetch('/api/v10/academic/'+iid()+'?v='+Date.now(),{cache:'no-store'})
+]);
+
+const c=await cr.json();
+const a=await ac.json();
+
+if(!c.success)throw new Error(c.error||'Curriculum load failed');
+
+v11Data=c.curriculum||{subjects:[],units:[],topics:[],learningOutcomes:[]};
+const subjects=(a.tree&&a.tree.subjects)||v11Data.subjects||[];
+
+fill('v11SubjectSelect',subjects,x=>esc(x.name)+(x.code?' · '+esc(x.code):''));
+fill('v11UnitSelect',v11Data.units,x=>{
+const s=v11Data.subjects.find(z=>z.id===x.subject_id);
+return 'Unit '+x.unit_number+': '+esc(x.name)+(s?' — '+esc(s.name):'');
+});
+fill('v11TopicSelect',v11Data.topics,x=>{
+const u=v11Data.units.find(z=>z.id===x.unit_id);
+return 'Topic '+x.topic_number+': '+esc(x.name)+(u?' — '+esc(u.name):'');
+});
+
+const root=document.getElementById('v11Tree');
+
+if(!v11Data.subjects.length){
+root.innerHTML='<div style="padding:16px;color:#777;">No subjects yet. Create Subject in V10 Academic Setup first.</div>';
+return;
+}
+
+root.innerHTML=v11Data.subjects.map(s=>{
+const units=v11Data.units.filter(u=>u.subject_id===s.id);
+return `<div style="margin:10px 0;padding:14px;border-left:4px solid #555;background:#fafafa;border-radius:8px;">
+<strong>Subject: ${esc(s.name)}</strong>${s.code?' · '+esc(s.code):''}
+${units.length?units.map(u=>{
+const topics=v11Data.topics.filter(t=>t.unit_id===u.id);
+return `<div style="margin:10px 0 0 18px;padding:10px;border-left:3px solid #aaa;">
+<strong>Unit ${esc(u.unit_number)}: ${esc(u.name)}</strong>
+${topics.length?topics.map(t=>{
+const los=v11Data.learningOutcomes.filter(o=>o.topic_id===t.id);
+return `<div style="margin:8px 0 0 18px;">
+<strong>Topic ${esc(t.topic_number)}: ${esc(t.name)}</strong>
+${los.length?'<ul style="margin:5px 0 0 20px;">'+los.map(o=>'<li>'+esc(o.outcome)+'</li>').join('')+'</ul>':'<div style="color:#999;">No learning outcomes</div>'}
+</div>`;
+}).join(''):'<div style="color:#999;margin-left:18px;">No topics</div>'}
+</div>`;
+}).join(''):'<div style="color:#999;margin-left:18px;">No units</div>'}
+</div>`;
+}).join('');
+}catch(e){message(e.message,false);}
+};
+
+window.v11CreateUnit=async function(){
+try{
+const subjectId=Number(document.getElementById('v11SubjectSelect').value);
+const unitNumber=Number(document.getElementById('v11UnitNumber').value);
+const name=document.getElementById('v11UnitName').value.trim();
+if(!subjectId)throw new Error('Select Subject');
+if(!unitNumber||!name)throw new Error('Unit number and name are required');
+await post('/api/v11/unit',{
+institutionId:iid(),subjectId,unitNumber,name,
+description:document.getElementById('v11UnitDescription').value.trim()
+});
+message('Unit created successfully.');
+document.getElementById('v11UnitName').value='';
+document.getElementById('v11UnitDescription').value='';
+await v11LoadAll();
+}catch(e){message(e.message,false);}
+};
+
+window.v11CreateTopic=async function(){
+try{
+const unitId=Number(document.getElementById('v11UnitSelect').value);
+const topicNumber=Number(document.getElementById('v11TopicNumber').value);
+const name=document.getElementById('v11TopicName').value.trim();
+if(!unitId)throw new Error('Select Unit');
+if(!topicNumber||!name)throw new Error('Topic number and name are required');
+await post('/api/v11/topic',{
+institutionId:iid(),unitId,topicNumber,name,
+description:document.getElementById('v11TopicDescription').value.trim()
+});
+message('Topic created successfully.');
+document.getElementById('v11TopicName').value='';
+document.getElementById('v11TopicDescription').value='';
+await v11LoadAll();
+}catch(e){message(e.message,false);}
+};
+
+window.v11CreateOutcome=async function(){
+try{
+const topicId=Number(document.getElementById('v11TopicSelect').value);
+const outcome=document.getElementById('v11Outcome').value.trim();
+if(!topicId)throw new Error('Select Topic');
+if(!outcome)throw new Error('Learning outcome is required');
+await post('/api/v11/learning-outcome',{
+institutionId:iid(),topicId,outcome
+});
+message('Learning outcome added successfully.');
+document.getElementById('v11Outcome').value='';
+await v11LoadAll();
+}catch(e){message(e.message,false);}
+};
+
+document.addEventListener('DOMContentLoaded',()=>setTimeout(v11LoadAll,500));
+})();
+</script>
+<!-- NEXORA V11 CURRICULUM UI -->
+
+
+<!-- NEXORA V12 CONTENT INTELLIGENCE UI -->
+<section id="v12ContentUI" style="margin-top:24px;">
+<div style="background:#fff;border:1px solid #ddd;border-radius:14px;padding:22px;">
+<h2 style="margin:0 0 6px;">Academic Content Intelligence</h2>
+<p style="color:#666;margin:0 0 20px;">
+Topic → Notes → PYQ → MCQ → Test → Learning Outcome
+</p>
+
+<input id="v12InstitutionId" type="hidden" value="1">
+
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+
+<div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+<h3>1. Add Content</h3>
+
+<select id="v12TopicSelect" style="width:100%;padding:10px;margin:5px 0;"></select>
+
+<select id="v12ContentType" style="width:100%;padding:10px;margin:5px 0;">
+<option value="NOTES">Notes</option>
+<option value="PYQ">PYQ</option>
+<option value="MCQ">MCQ</option>
+<option value="TEST">Test</option>
+</select>
+
+<input id="v12ContentTitle" placeholder="Content Title"
+style="width:100%;padding:10px;margin:5px 0;">
+
+<textarea id="v12ContentBody" placeholder="Content / questions / notes..."
+style="width:100%;padding:10px;margin:5px 0;min-height:120px;"></textarea>
+
+<input id="v12ContentSource" placeholder="Source / Reference"
+style="width:100%;padding:10px;margin:5px 0;">
+
+<label style="display:block;margin:10px 0;">
+<input id="v12ContentVerified" type="checkbox">
+ Verified / authentic source
+</label>
+
+<button onclick="v12CreateContent()" class="primary">
+Add Academic Content
+</button>
+</div>
+
+<div style="border:1px solid #ddd;border-radius:12px;padding:16px;">
+<h3>2. Map Learning Outcome</h3>
+
+<select id="v12ContentSelect"
+style="width:100%;padding:10px;margin:5px 0;"></select>
+
+<select id="v12OutcomeSelect"
+style="width:100%;padding:10px;margin:5px 0;"></select>
+
+<button onclick="v12MapOutcome()" class="primary">
+Map Outcome
+</button>
+
+<div style="margin-top:12px;color:#777;font-size:13px;">
+Mapping connects academic content with measurable learning outcomes.
+</div>
+</div>
+
+</div>
+
+<div id="v12Message"
+style="margin-top:18px;padding:10px;border-radius:8px;"></div>
+
+<div style="margin-top:22px;border-top:1px solid #eee;padding-top:18px;">
+<div style="display:flex;justify-content:space-between;align-items:center;">
+<h3 style="margin:0;">Content Intelligence Overview</h3>
+<button onclick="v12LoadAll()">Refresh</button>
+</div>
+
+<div id="v12Stats"
+style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:14px;">
+</div>
+
+<div id="v12ContentTree" style="margin-top:18px;"></div>
+</div>
+</div>
+</section>
+
+<script>
+(function(){
+if(window.__NEXORA_V12_CONTENT_UI__) return;
+window.__NEXORA_V12_CONTENT_UI__=true;
+
+let v12Data={
+topics:[],
+content:[],
+outcomeMappings:[]
+};
+
+function iid(){
+return Number(
+document.getElementById('v12InstitutionId')?.value ||
+document.getElementById('loginInstitutionId')?.value || 1
+);
+}
+
+function msg(t,ok=true){
+const e=document.getElementById('v12Message');
+if(!e)return;
+e.textContent=t;
+e.style.background=ok?'#eefbf1':'#fff1f1';
+e.style.color=ok?'#176b2c':'#a11';
+}
+
+function esc(v){
+return String(v??'').replace(/[&<>"']/g,m=>({
+'&':'&amp;',
+'<':'&lt;',
+'>':'&gt;',
+'"':'&quot;',
+"'":'&#39;'
+}[m]));
+}
+
+async function post(url,body){
+const r=await fetch(url,{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify(body)
+});
+const d=await r.json().catch(()=>({success:false,error:'Invalid response'}));
+if(!r.ok||d.success===false)
+throw new Error(d.error||'Request failed');
+return d;
+}
+
+function fill(id,items,label){
+const e=document.getElementById(id);
+if(!e)return;
+e.innerHTML=items.length
+?items.map(x=>`<option value="${x.id}">${label(x)}</option>`).join('')
+:'<option value="">No data available</option>';
+}
+
+window.v12LoadAll=async function(){
+try{
+const r=await fetch(
+'/api/v12/content-intelligence/'+iid()+'?v='+Date.now(),
+{cache:'no-store'}
+);
+const d=await r.json();
+
+if(!r.ok||d.success===false)
+throw new Error(d.error||'Content intelligence load failed');
+
+v12Data={
+topics:d.topics||[],
+content:d.content||[],
+outcomeMappings:d.outcomeMappings||[]
+};
+
+fill('v12TopicSelect',v12Data.topics,x=>
+esc(x.subject_name)+' → Unit '+esc(x.unit_number)+
+' → Topic '+esc(x.topic_number)+': '+esc(x.name)
+);
+
+fill('v12ContentSelect',v12Data.content,x=>
+'['+esc(x.content_type)+'] '+esc(x.title)
+);
+
+const topicMap={};
+v12Data.topics.forEach(t=>topicMap[t.id]=t);
+
+const outcomes=[];
+
+try{
+const cr=await fetch(
+'/api/v11/curriculum/'+iid()+'?v='+Date.now(),
+{cache:'no-store'}
+);
+const cd=await cr.json();
+if(cd.success && cd.curriculum)
+(cd.curriculum.learningOutcomes||[]).forEach(o=>outcomes.push(o));
+}catch(_){}
+
+fill('v12OutcomeSelect',outcomes,x=>{
+const t=topicMap[x.topic_id];
+return esc(x.outcome)+(t?' — '+esc(t.name):'');
+});
+
+const summary={
+topics:v12Data.topics.length,
+notes:v12Data.content.filter(x=>x.content_type==='NOTES').length,
+pyq:v12Data.content.filter(x=>x.content_type==='PYQ').length,
+mcq:v12Data.content.filter(x=>x.content_type==='MCQ').length,
+tests:v12Data.content.filter(x=>x.content_type==='TEST').length,
+verified:v12Data.content.filter(x=>Number(x.verified)===1).length,
+mapped:v12Data.outcomeMappings.length
+};
+
+document.getElementById('v12Stats').innerHTML=[
+['Topics',summary.topics],
+['Notes',summary.notes],
+['PYQ',summary.pyq],
+['MCQ',summary.mcq],
+['Tests',summary.tests],
+['Verified',summary.verified],
+['Mapped Outcomes',summary.mapped]
+].map(x=>`
+<div style="border:1px solid #ddd;border-radius:10px;padding:12px;text-align:center;">
+<div style="font-size:12px;color:#777;">${x[0]}</div>
+<strong style="font-size:22px;">${x[1]}</strong>
+</div>`).join('');
+
+const root=document.getElementById('v12ContentTree');
+
+if(!v12Data.topics.length){
+root.innerHTML=`
+<div style="padding:16px;color:#777;">
+No topics available. Create Subject → Unit → Topic first.
+</div>`;
+return;
+}
+
+root.innerHTML=v12Data.topics.map(t=>{
+const rows=v12Data.content.filter(c=>c.topic_id===t.id);
+
+return `
+<div style="margin:10px 0;padding:15px;border-left:4px solid #555;
+background:#fafafa;border-radius:8px;">
+<strong>
+${esc(t.subject_name)} →
+Unit ${esc(t.unit_number)} →
+Topic ${esc(t.topic_number)}: ${esc(t.name)}
+</strong>
+
+<div style="margin:10px 0 0 18px;">
+${rows.length
+?rows.map(c=>`
+<div style="padding:10px;margin:7px 0;background:#fff;
+border:1px solid #eee;border-radius:8px;">
+<strong>[${esc(c.content_type)}]</strong>
+${esc(c.title)}
+${Number(c.verified)===1
+?' <span style="color:green;">✓ VERIFIED</span>':''}
+${c.source
+?'<div style="font-size:12px;color:#777;">Source: '+esc(c.source)+'</div>':''}
+${c.outcome_count!=null
+?'<div style="font-size:12px;color:#777;">Learning outcomes mapped: '+esc(c.outcome_count)+'</div>':''}
+</div>`).join('')
+:'<span style="color:#999;">No content yet</span>'}
+</div>
+</div>`;
+}).join('');
+
+}catch(e){
+msg(e.message,false);
+}
+};
+
+window.v12CreateContent=async function(){
+try{
+const topicId=Number(document.getElementById('v12TopicSelect').value);
+const contentType=document.getElementById('v12ContentType').value;
+const title=document.getElementById('v12ContentTitle').value.trim();
+
+if(!topicId)throw new Error('Select Topic');
+if(!title)throw new Error('Content title is required');
+
+await post('/api/v12/content',{
+institutionId:iid(),
+topicId,
+contentType,
+title,
+content:document.getElementById('v12ContentBody').value,
+source:document.getElementById('v12ContentSource').value.trim(),
+verified:document.getElementById('v12ContentVerified').checked?1:0
+});
+
+msg(contentType+' content created successfully.');
+
+document.getElementById('v12ContentTitle').value='';
+document.getElementById('v12ContentBody').value='';
+document.getElementById('v12ContentSource').value='';
+document.getElementById('v12ContentVerified').checked=false;
+
+await v12LoadAll();
+}catch(e){
+msg(e.message,false);
+}
+};
+
+window.v12MapOutcome=async function(){
+try{
+const contentId=Number(document.getElementById('v12ContentSelect').value);
+const outcomeId=Number(document.getElementById('v12OutcomeSelect').value);
+
+if(!contentId)throw new Error('Select Content');
+if(!outcomeId)throw new Error('Select Learning Outcome');
+
+await post('/api/v12/content-outcome',{
+institutionId:iid(),
+contentId,
+outcomeId
+});
+
+msg('Learning outcome mapped successfully.');
+await v12LoadAll();
+}catch(e){
+msg(e.message,false);
+}
+};
+
+document.addEventListener('DOMContentLoaded',()=>{
+setTimeout(v12LoadAll,600);
+});
+
+})();
+</script>
+<!-- NEXORA V12 CONTENT INTELLIGENCE UI -->
+
+
+<!-- =========================================================
+     NEXORA V13 STUDENT INTELLIGENCE UI
+     ========================================================= -->
+
+<section id="v13IntelligenceSection" style="margin-top:32px;">
+  <div style="display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;">
+    <div>
+      <div style="font-size:12px;letter-spacing:1.5px;font-weight:700;opacity:.65;">
+        NEXORA V13
+      </div>
+      <h2 style="margin:4px 0;">Student Intelligence</h2>
+      <p style="margin:0;opacity:.7;">
+        Learning progress, assessments and skill evidence in one academic view.
+      </p>
+    </div>
+    <button type="button" id="v13RefreshBtn" class="primary">
+      Refresh Intelligence
+    </button>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:22px;">
+    <div class="card">
+      <div style="font-size:12px;opacity:.65;">Student</div>
+      <select id="v13StudentSelect" style="width:100%;margin-top:8px;">
+        <option value="">Select Student</option>
+      </select>
+    </div>
+
+    <div class="card">
+      <div style="font-size:12px;opacity:.65;">Institution ID</div>
+      <input id="v13InstitutionId" value="1" readonly style="width:100%;margin-top:8px;">
+    </div>
+  </div>
+
+  <div id="v13StudentStats"
+       style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:18px;">
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;margin-top:20px;">
+
+    <div class="card">
+      <h3>Learning Progress</h3>
+      <div id="v13ProgressList" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
+      <h3>Assessment Results</h3>
+      <div id="v13ResultsList" style="margin-top:12px;"></div>
+    </div>
+
+    <div class="card">
+      <h3>Skill Evidence</h3>
+      <div id="v13EvidenceList" style="margin-top:12px;"></div>
+    </div>
+
+  </div>
+</section>
+
+<section id="v13AssessmentSection" style="margin-top:32px;">
+  <div>
+    <div style="font-size:12px;letter-spacing:1.5px;font-weight:700;opacity:.65;">
+      V13 ASSESSMENT INTELLIGENCE
+    </div>
+    <h2 style="margin:4px 0;">Assessment Dashboard</h2>
+  </div>
+
+  <div id="v13AssessmentStats"
+       style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;margin-top:18px;">
+  </div>
+
+  <div class="card" style="margin-top:18px;">
+    <h3>Assessment Performance</h3>
+    <div id="v13AssessmentList" style="margin-top:12px;"></div>
+  </div>
+</section>
+
+<script>
+(function(){
+
+  if(window.__NEXORA_V13_UI__) return;
+  window.__NEXORA_V13_UI__=true;
+
+  const institutionEl=document.getElementById("v13InstitutionId");
+  const studentEl=document.getElementById("v13StudentSelect");
+
+  function institutionId(){
+    const stored=localStorage.getItem("nexoraUniversityInstitutionId");
+    const login=document.getElementById("loginInstitutionId");
+    const value=stored || (login && login.value) || institutionEl?.value || "1";
+
+    if(institutionEl) institutionEl.value=value;
+    return value;
+  }
+
+  function esc(value){
+    return String(value ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;");
+  }
+
+  function stat(title,value){
+    return `
+      <div class="card">
+        <div style="font-size:12px;opacity:.65;">${esc(title)}</div>
+        <div style="font-size:28px;font-weight:800;margin-top:5px;">
+          ${esc(value)}
+        </div>
+      </div>`;
+  }
+
+  async function json(url,options){
+    const r=await fetch(url,{
+      cache:"no-store",
+      ...options
+    });
+    const data=await r.json();
+    if(!r.ok || data.success===false)
+      throw new Error(data.error || "Request failed");
+    return data;
+  }
+
+  async function loadStudents(){
+    try{
+      const id=institutionId();
+
+      const data=await json(
+        "/api/v7/institution/"+encodeURIComponent(id)+"/users"
+      );
+
+      const users=Array.isArray(data.users)?data.users:[];
+
+      studentEl.innerHTML='<option value="">Select Student</option>';
+
+      users
+        .filter(u=>String(u.role||"").toUpperCase()==="STUDENT")
+        .forEach(u=>{
+          const option=document.createElement("option");
+          option.value=u.id;
+          option.textContent=(u.name||"Student")+" — "+(u.email||"");
+          studentEl.appendChild(option);
+        });
+
+      /*
+       * V4/V5 may contain students outside v7 user_accounts.
+       * If no STUDENT accounts exist, try the legacy student endpoint.
+       */
+      if(studentEl.options.length===1){
+        try{
+          const legacy=await json(
+            "/api/v2/dashboard"
+          );
+
+          const students=Array.isArray(legacy.students)
+            ?legacy.students
+            :[];
+
+          students.forEach(u=>{
+            const option=document.createElement("option");
+            option.value=u.id;
+            option.textContent=u.name || ("Student "+u.id);
+            studentEl.appendChild(option);
+          });
+        }catch(_){}
+      }
+
+    }catch(e){
+      console.warn("V13 student loader:",e.message);
+      studentEl.innerHTML='<option value="">No students available</option>';
+    }
+  }
+
+  function renderStudent(data){
+
+    const s=data.summary||{};
+
+    document.getElementById("v13StudentStats").innerHTML=[
+      stat("Topics Tracked",s.topicsTracked||0),
+      stat("Topics Completed",s.topicsCompleted||0),
+      stat("In Progress",s.topicsInProgress||0),
+      stat("Assessments",s.assessments||0),
+      stat("Average %",Number(s.averagePercentage||0).toFixed(2)),
+      stat("Skill Evidence",s.skillEvidence||0)
+    ].join("");
+
+    const progress=data.progress||[];
+    const results=data.results||[];
+    const evidence=data.evidence||[];
+
+    document.getElementById("v13ProgressList").innerHTML=
+      progress.length
+      ?progress.map(x=>`
+        <div style="padding:12px 0;border-bottom:1px solid rgba(128,128,128,.2);">
+          <div style="font-weight:700;">${esc(x.topic_name||"Topic")}</div>
+          <div style="font-size:12px;opacity:.65;">
+            ${esc(x.subject_name||"")} ${x.unit_name?" / "+esc(x.unit_name):""}
+          </div>
+          <div style="margin-top:7px;">
+            <div style="height:7px;background:rgba(128,128,128,.2);border-radius:20px;overflow:hidden;">
+              <div style="height:100%;width:${Math.max(0,Math.min(100,Number(x.progress)||0))}%;background:currentColor;"></div>
+            </div>
+            <div style="font-size:12px;margin-top:5px;">
+              ${Number(x.progress||0)}% — ${esc(x.status||"")}
+            </div>
+          </div>
+        </div>`
+      ).join("")
+      :'<div style="opacity:.6;">No learning progress recorded.</div>';
+
+    document.getElementById("v13ResultsList").innerHTML=
+      results.length
+      ?results.map(x=>`
+        <div style="padding:12px 0;border-bottom:1px solid rgba(128,128,128,.2);">
+          <div style="font-weight:700;">${esc(x.assessment_title||"Assessment")}</div>
+          <div style="font-size:12px;opacity:.65;">
+            ${esc(x.assessment_type||"TEST")}
+          </div>
+          <div style="font-size:20px;font-weight:800;margin-top:5px;">
+            ${Number(x.percentage||0).toFixed(2)}%
+          </div>
+          <div style="font-size:12px;">
+            ${Number(x.marks||0)} / ${Number(x.total_marks||0)}
+          </div>
+        </div>`
+      ).join("")
+      :'<div style="opacity:.6;">No assessment results recorded.</div>';
+
+    document.getElementById("v13EvidenceList").innerHTML=
+      evidence.length
+      ?evidence.map(x=>`
+        <div style="padding:12px 0;border-bottom:1px solid rgba(128,128,128,.2);">
+          <div style="font-weight:700;">${esc(x.skill_name||"Skill")}</div>
+          <div style="font-size:12px;opacity:.65;">
+            ${esc(x.evidence_type||"ASSESSMENT")}
+          </div>
+          <div style="margin-top:5px;font-weight:700;">
+            Score: ${Number(x.score||0)}
+          </div>
+        </div>`
+      ).join("")
+      :'<div style="opacity:.6;">No skill evidence recorded.</div>';
+  }
+
+  async function loadStudentIntelligence(){
+    const studentId=studentEl.value;
+
+    if(!studentId){
+      document.getElementById("v13StudentStats").innerHTML=
+        stat("Student","Select a student");
+      document.getElementById("v13ProgressList").innerHTML="";
+      document.getElementById("v13ResultsList").innerHTML="";
+      document.getElementById("v13EvidenceList").innerHTML="";
+      return;
+    }
+
+    try{
+      const data=await json(
+        "/api/v13/student-intelligence/"
+        +encodeURIComponent(institutionId())
+        +"/"
+        +encodeURIComponent(studentId)
+      );
+
+      renderStudent(data);
+    }catch(e){
+      console.error("V13 student intelligence:",e);
+      document.getElementById("v13StudentStats").innerHTML=
+        `<div class="card">Error: ${esc(e.message)}</div>`;
+    }
+  }
+
+  async function loadAssessmentIntelligence(){
+    try{
+      const data=await json(
+        "/api/v13/assessment-intelligence/"
+        +encodeURIComponent(institutionId())
+      );
+
+      const s=data.summary||{};
+
+      document.getElementById("v13AssessmentStats").innerHTML=[
+        stat("Assessments",s.assessments||0),
+        stat("Results",s.results||0),
+        stat("Students Assessed",s.students||0),
+        stat("Average %",Number(s.averagePercentage||0).toFixed(2))
+      ].join("");
+
+      const rows=data.assessments||[];
+
+      document.getElementById("v13AssessmentList").innerHTML=
+        rows.length
+        ?rows.map(a=>`
+          <div style="padding:14px 0;border-bottom:1px solid rgba(128,128,128,.2);">
+            <div style="font-weight:800;">${esc(a.title)}</div>
+            <div style="font-size:12px;opacity:.65;">
+              ${esc(a.assessment_type||"TEST")}
+              · Total Marks: ${Number(a.total_marks||0)}
+            </div>
+            <div style="margin-top:6px;">
+              ${Number(a.result_count||0)} results
+              · Average ${Number(a.average_percentage||0).toFixed(2)}%
+            </div>
+          </div>`
+        ).join("")
+        :'<div style="opacity:.6;">No assessments created yet.</div>';
+
+    }catch(e){
+      console.error("V13 assessment intelligence:",e);
+      document.getElementById("v13AssessmentStats").innerHTML=
+        `<div class="card">Error: ${esc(e.message)}</div>`;
+    }
+  }
+
+  async function refresh(){
+    await loadStudents();
+    await loadAssessmentIntelligence();
+    await loadStudentIntelligence();
+  }
+
+  studentEl?.addEventListener("change",loadStudentIntelligence);
+  document.getElementById("v13RefreshBtn")?.addEventListener("click",refresh);
+
+  window.v13RefreshIntelligence=refresh;
+
+  setTimeout(refresh,300);
+
+  console.log("NEXORA V13 STUDENT INTELLIGENCE UI: ACTIVE");
+  console.log("STUDENT DASHBOARD: ACTIVE");
+  console.log("ASSESSMENT DASHBOARD: ACTIVE");
+
+})();
+</script>
+
+
+<!-- NEXORA V14 PLACEMENT UI -->
+<section id="v14PlacementSection" class="panel">
+  <div class="section-title">
+    <div>
+      <div class="eyebrow">V14</div>
+      <h2>Placement Intelligence</h2>
+      <p>Job roles, required skills, applications and student readiness.</p>
+    </div>
+    <button class="primary" type="button" onclick="v14LoadAll()">Refresh Placement</button>
+  </div>
+
+  <div class="stats-grid">
+    <div class="stat-card"><span>Jobs</span><strong id="v14JobsCount">0</strong></div>
+    <div class="stat-card"><span>Applications</span><strong id="v14ApplicationsCount">0</strong></div>
+    <div class="stat-card"><span>Students</span><strong id="v14StudentsCount">0</strong></div>
+    <div class="stat-card"><span>Required Skills</span><strong id="v14SkillsCount">0</strong></div>
+  </div>
+
+  <div class="card">
+    <h3>Create Job Role</h3>
+    <div class="form-grid">
+      <input id="v14InstitutionId" type="number" value="1" placeholder="Institution ID">
+      <input id="v14JobTitle" placeholder="Job title e.g. Web Developer">
+      <input id="v14Company" placeholder="Company">
+      <input id="v14Location" placeholder="Location">
+      <select id="v14EmploymentType">
+        <option>FULL_TIME</option>
+        <option>INTERNSHIP</option>
+        <option>PART_TIME</option>
+        <option>CONTRACT</option>
+      </select>
+      <input id="v14JobDescription" placeholder="Job description">
+    </div>
+    <button class="primary" type="button" onclick="v14CreateJob()">Create Job</button>
+  </div>
+
+  <div class="card">
+    <h3>Job Roles</h3>
+    <div id="v14JobsList">Loading...</div>
+  </div>
+
+  <div class="card">
+    <h3>Student Placement Readiness</h3>
+    <div class="form-grid">
+      <input id="v14StudentId" type="number" placeholder="Student ID">
+      <button class="primary" type="button" onclick="v14LoadReadiness()">Check Readiness</button>
+    </div>
+    <div id="v14ReadinessList"></div>
+  </div>
+</section>
+
+<script>
+async function v14Json(url, options={}){
+  const r=await fetch(url,{
+    cache:"no-store",
+    headers:{"Content-Type":"application/json",...(options.headers||{})},
+    ...options
+  });
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok || d.success===false) throw new Error(d.error||("HTTP "+r.status));
+  return d;
+}
+
+function v14Inst(){
+  return Number(
+    document.getElementById("v14InstitutionId")?.value ||
+    localStorage.getItem("nexoraUniversityInstitutionId") ||
+    1
+  );
+}
+
+function v14Esc(v){
+  return String(v??"").replace(/[&<>"']/g,m=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[m]));
+}
+
+async function v14LoadAll(){
+  try{
+    const id=v14Inst();
+    const [summary,jobs]=await Promise.all([
+      v14Json(`/api/v14/placement-intelligence/${id}?t=${Date.now()}`),
+      v14Json(`/api/v14/jobs/${id}?t=${Date.now()}`)
+    ]);
+
+    const x=summary.summary||{};
+    document.getElementById("v14JobsCount").textContent=x.jobs||0;
+    document.getElementById("v14ApplicationsCount").textContent=x.applications||0;
+    document.getElementById("v14StudentsCount").textContent=x.students||0;
+    document.getElementById("v14SkillsCount").textContent=x.requiredSkills||0;
+
+    const list=document.getElementById("v14JobsList");
+    list.innerHTML=(jobs.jobs||[]).map(j=>`
+      <div class="list-row">
+        <div>
+          <strong>${v14Esc(j.title)}</strong>
+          <div>${v14Esc(j.company||"")}${j.location?" · "+v14Esc(j.location):""}</div>
+        </div>
+        <div>Skills: ${j.skill_count||0} · Applications: ${j.application_count||0}</div>
+      </div>
+    `).join("") || "<p>No job roles created yet.</p>";
+  }catch(e){
+    document.getElementById("v14JobsList").innerHTML=
+      `<p>Placement load error: ${v14Esc(e.message)}</p>`;
+  }
+}
+
+async function v14CreateJob(){
+  try{
+    const id=v14Inst();
+    const title=document.getElementById("v14JobTitle").value.trim();
+    if(!title) return alert("Job title is required.");
+
+    await v14Json("/api/v14/job",{
+      method:"POST",
+      body:JSON.stringify({
+        institutionId:id,
+        title,
+        company:document.getElementById("v14Company").value.trim(),
+        location:document.getElementById("v14Location").value.trim(),
+        employmentType:document.getElementById("v14EmploymentType").value,
+        description:document.getElementById("v14JobDescription").value.trim()
+      })
+    });
+
+    document.getElementById("v14JobTitle").value="";
+    document.getElementById("v14Company").value="";
+    document.getElementById("v14Location").value="";
+    document.getElementById("v14JobDescription").value="";
+    await v14LoadAll();
+    alert("Job role created successfully.");
+  }catch(e){
+    alert(e.message);
+  }
+}
+
+async function v14LoadReadiness(){
+  try{
+    const studentId=Number(document.getElementById("v14StudentId").value);
+    if(!studentId) return alert("Student ID is required.");
+
+    const d=await v14Json(
+      `/api/v14/student-readiness/${v14Inst()}/${studentId}?t=${Date.now()}`
+    );
+
+    const el=document.getElementById("v14ReadinessList");
+    el.innerHTML=(d.readiness||[]).map(x=>`
+      <div class="list-row">
+        <div>
+          <strong>${v14Esc(x.job.title)}</strong>
+          <div>${v14Esc(x.job.company||"")}</div>
+        </div>
+        <div>
+          <strong>${x.readinessPercentage}%</strong>
+          ${
+            (x.skillGaps||[]).filter(g=>g.gap>0).length
+            ? `<div>Skill gaps: ${(x.skillGaps||[]).filter(g=>g.gap>0)
+                .map(g=>v14Esc(g.skillName||("Skill "+g.skillId))).join(", ")}</div>`
+            : "<div>No measured skill gap</div>"
+          }
+        </div>
+      </div>
+    `).join("") || "<p>No job readiness data available.</p>";
+  }catch(e){
+    document.getElementById("v14ReadinessList").innerHTML=
+      `<p>Readiness error: ${v14Esc(e.message)}</p>`;
+  }
+}
+
+document.addEventListener("DOMContentLoaded",()=>{
+  const id=localStorage.getItem("nexoraUniversityInstitutionId");
+  if(id && document.getElementById("v14InstitutionId"))
+    document.getElementById("v14InstitutionId").value=id;
+  v14LoadAll();
+});
+</script>
+
+</body>
+
+
+</html>
+
+

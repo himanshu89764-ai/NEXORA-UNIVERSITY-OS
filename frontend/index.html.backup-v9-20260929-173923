@@ -1,0 +1,289 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NEXORA University OS</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,Arial,sans-serif;background:#f4f6fa;color:#172033}
+header{background:#111827;color:#fff;padding:22px 30px}
+header h1{margin:0;font-size:25px}
+header p{margin:7px 0 0;opacity:.75}
+nav{display:flex;gap:8px;flex-wrap:wrap;padding:16px 30px;background:#fff;border-bottom:1px solid #e5e7eb}
+nav button{border:0;background:#eef2f7;padding:10px 15px;border-radius:9px;cursor:pointer}
+nav button.active{background:#111827;color:#fff}
+main{max-width:1250px;margin:auto;padding:28px}
+.page{display:none}
+.page.active{display:block}
+h2{margin-top:0}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:16px}
+.card{background:#fff;border-radius:15px;padding:20px;box-shadow:0 3px 16px #0000000d;border:1px solid #e8ebf0}
+.label{font-size:14px;color:#697386}
+.number{font-size:30px;font-weight:700;margin-top:8px}
+.panel{background:#fff;border-radius:15px;padding:22px;margin-top:20px;border:1px solid #e8ebf0}
+.status{padding:13px;border-radius:10px;background:#f0fdf4;margin-bottom:20px}
+table{width:100%;border-collapse:collapse}
+th,td{text-align:left;padding:11px;border-bottom:1px solid #edf0f3}
+.badge{display:inline-block;padding:5px 9px;border-radius:8px;background:#eef2ff}
+</style>
+</head>
+<body>
+
+<header>
+<h1>NEXORA University OS</h1>
+<p>Academic Intelligence • Skills • Assessment • Placement</p>
+</header>
+
+<nav>
+<button class="active" onclick="showPage('overview',this)">Overview</button>
+<button onclick="showPage('academic',this)">Academic</button>
+<button onclick="showPage('students',this)">Students</button>
+<button onclick="showPage('faculty',this)">Faculty</button>
+<button onclick="showPage('placement',this)">Placement</button>
+<button onclick="showPage('skills',this)">Skills</button>
+</nav>
+
+<main>
+
+<section id="overview" class="page active">
+<h2>Institutional Overview</h2>
+<div class="status" id="systemStatus">Checking University OS...</div>
+
+<!-- NEXORA UNIVERSITY OS V8 SECURITY PANEL -->
+<div class="panel">
+<h3>Security & Access</h3>
+<p style="color:#697386">
+Institution-bound accounts � Role permissions � Secure sessions � Audit logging
+</p>
+<div id="v8SecurityStatus" class="badge">Authentication layer ready</div>
+</div>
+<!-- NEXORA UNIVERSITY OS V8 SECURITY PANEL -->
+
+
+<!-- NEXORA UNIVERSITY OS V7 ROLE WORKSPACE -->
+<div class="panel" style="margin-bottom:20px">
+<h3>Institution Workspace</h3>
+<div style="display:flex;gap:10px;flex-wrap:wrap">
+<select id="roleSelector" style="padding:11px;border:1px solid #d7dce4;border-radius:9px">
+<option>UNIVERSITY_ADMIN</option>
+<option>DEAN</option>
+<option>HOD</option>
+<option>FACULTY</option>
+<option>TPO</option>
+<option>STUDENT</option>
+</select>
+<input id="institutionName" placeholder="Institution name"
+style="padding:11px;border:1px solid #d7dce4;border-radius:9px;min-width:240px">
+<button onclick="createInstitution()"
+style="padding:11px 16px;border:0;border-radius:9px;background:#111827;color:white;cursor:pointer">
+Create Institution
+</button>
+</div>
+<div id="v7Message" style="margin-top:12px"></div>
+</div>
+<!-- NEXORA UNIVERSITY OS V7 ROLE WORKSPACE -->
+
+<div class="grid" id="dashboardCards"></div>
+
+<div class="panel">
+<h3>University Intelligence Layer</h3>
+<p>Academic structure, student skills, assessment evidence and placement readiness are connected through one institutional data layer.</p>
+</div>
+</section>
+
+<section id="academic" class="page">
+<h2>Academic Structure</h2>
+<div class="grid" id="academicCards"></div>
+<div class="panel">
+<h3>Hierarchy</h3>
+<p>University → College → Department → Program → Semester → Subject</p>
+<div id="academicTree">Loading...</div>
+</div>
+</section>
+
+<section id="students" class="page">
+<h2>Student Intelligence</h2>
+<div class="grid">
+<div class="card"><div class="label">Student Profiles</div><div class="number" id="studentCount">0</div></div>
+<div class="card"><div class="label">Skill Evidence</div><div class="number" id="evidenceCount">0</div></div>
+<div class="card"><div class="label">Career Goals</div><div class="number" id="goalCount">0</div></div>
+</div>
+<div class="panel">
+<h3>Skill Passport</h3>
+<p>Every student's skills can be backed by assessment evidence and career goals.</p>
+</div>
+</section>
+
+<section id="faculty" class="page">
+<h2>Faculty Workspace</h2>
+<div class="grid">
+<div class="card"><div class="label">Programs</div><div class="number" id="facultyPrograms">0</div></div>
+<div class="card"><div class="label">Subjects</div><div class="number" id="facultySubjects">0</div></div>
+<div class="card"><div class="label">Assessments</div><div class="number" id="assessmentCount">0</div></div>
+</div>
+<div class="panel">
+<h3>Faculty Intelligence</h3>
+<p>Curriculum, subjects and assessments become connected to measurable student skill development.</p>
+</div>
+</section>
+
+<section id="placement" class="page">
+<h2>Placement Intelligence</h2>
+<div class="grid">
+<div class="card"><div class="label">Employers</div><div class="number" id="employerCount">0</div></div>
+<div class="card"><div class="label">Readiness Records</div><div class="number" id="readinessCount">0</div></div>
+<div class="card"><div class="label">Average Readiness</div><div class="number" id="readinessAvg">0%</div></div>
+<div class="card"><div class="label">Skill Gaps</div><div class="number" id="skillGaps">0</div></div>
+</div>
+<div class="panel">
+<h3>Employer → Skill → Student</h3>
+<p>Employer requirements can be mapped against evidence-backed student skills.</p>
+</div>
+</section>
+
+<section id="skills" class="page">
+<h2>Skill Intelligence</h2>
+<div class="grid" id="skillCards"></div>
+<div class="panel">
+<h3>Institutional Skill Summary</h3>
+<div id="skillTable">Loading...</div>
+</div>
+</section>
+
+</main>
+
+<script>
+const $=id=>document.getElementById(id);
+
+function showPage(id,button){
+ document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+ document.querySelectorAll('nav button').forEach(x=>x.classList.remove('active'));
+ $(id).classList.add('active');
+ button.classList.add('active');
+}
+
+async function getJSON(url){
+ const r=await fetch(url);
+ if(!r.ok) throw new Error(url);
+ return r.json();
+}
+
+async function loadDashboard(){
+ try{
+  const d=await getJSON('/api/v2/dashboard');
+  const x=d.institution;
+
+  $('systemStatus').textContent='NEXORA University OS — Institutional Database ONLINE';
+
+  const labels={
+   universities:'Universities',colleges:'Colleges',
+   departments:'Departments',programs:'Programs',
+   semesters:'Semesters',subjects:'Subjects',
+   students:'Students',skills:'Skills',employers:'Employers'
+  };
+
+  $('dashboardCards').innerHTML=Object.entries(x).map(([k,v])=>
+   `<div class="card"><div class="label">${labels[k]}</div><div class="number">${v}</div></div>`
+  ).join('');
+
+  $('academicCards').innerHTML=
+   ['universities','colleges','departments','programs','semesters','subjects']
+   .map(k=>`<div class="card"><div class="label">${labels[k]}</div><div class="number">${x[k]}</div></div>`).join('');
+
+  $('studentCount').textContent=x.students;
+  $('facultyPrograms').textContent=x.programs;
+  $('facultySubjects').textContent=x.subjects;
+  $('employerCount').textContent=x.employers;
+  $('skillCards').innerHTML=
+   `<div class="card"><div class="label">Institution Skills</div><div class="number">${x.skills}</div></div>`;
+ }catch(e){
+  $('systemStatus').textContent='NEXORA University OS API offline';
+ }
+}
+
+async function loadAcademic(){
+ try{
+  const d=await getJSON('/api/v3/academic-tree');
+  const rows=d.data||[];
+  if(!rows.length){
+   $('academicTree').innerHTML='<p>No academic structure added yet.</p>';
+   return;
+  }
+  $('academicTree').innerHTML=
+   '<table><tr><th>University</th><th>College</th><th>Department</th><th>Program</th><th>Semester</th><th>Subject</th></tr>'+
+   rows.map(r=>`<tr>
+   <td>${r.university_name||'—'}</td>
+   <td>${r.college_name||'—'}</td>
+   <td>${r.department_name||'—'}</td>
+   <td>${r.program_name||'—'}</td>
+   <td>${r.semester_number||'—'}</td>
+   <td>${r.subject_name||'—'}</td>
+   </tr>`).join('')+'</table>';
+ }catch(e){
+  $('academicTree').textContent='Academic API unavailable';
+ }
+}
+
+async function loadIntelligence(){
+ try{
+  const a=await getJSON('/api/v5/assessment-summary');
+  $('assessmentCount').textContent=a.summary.total_attempts||0;
+ }catch(e){}
+
+ try{
+  const p=await getJSON('/api/v5/placement-summary');
+  const x=p.summary;
+  $('readinessCount').textContent=x.readiness_records||0;
+  $('readinessAvg').textContent=(x.average_readiness||0)+'%';
+  $('skillGaps').textContent=x.total_skill_gaps||0;
+ }catch(e){}
+
+ try{
+  const s=await getJSON('/api/v4/skill-summary');
+  const rows=s.summary||[];
+  $('skillTable').innerHTML=rows.length
+   ? '<table><tr><th>Category</th><th>Students</th><th>Average Level</th><th>Evidence</th></tr>'+
+     rows.map(r=>`<tr><td><span class="badge">${r.category||'General'}</span></td><td>${r.students}</td><td>${r.average_level||0}/5</td><td>${r.evidence||0}</td></tr>`).join('')+'</table>'
+   : '<p>No skill data yet.</p>';
+ }catch(e){
+  $('skillTable').textContent='Skill API unavailable';
+ }
+}
+
+
+async function createInstitution(){
+ const name=$('institutionName').value.trim();
+ const role=$('roleSelector').value;
+ const msg=$('v7Message');
+
+ if(!name){
+  msg.textContent='Enter institution name first.';
+  return;
+ }
+
+ try{
+  const r=await fetch('/api/v7/institution',{
+   method:'POST',
+   headers:{'Content-Type':'application/json'},
+   body:JSON.stringify({name})
+  });
+  const d=await r.json();
+
+  if(!r.ok) throw new Error(d.error||'Institution creation failed');
+
+  msg.textContent=
+   'Institution created: '+d.institution.name+
+   ' | Workspace: '+role+
+   ' | ID: '+d.institution.id;
+ }catch(e){
+  msg.textContent=e.message;
+ }
+}
+
+loadDashboard();
+loadAcademic();
+loadIntelligence();
+</script>
+</body>
+</html>

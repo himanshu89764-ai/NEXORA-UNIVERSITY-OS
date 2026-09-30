@@ -1,0 +1,10 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>NEXORA University OS</title></head>
+<body>
+<h1>NEXORA University OS</h1>
+<p>Independent University & College Intelligence Platform</p>
+<p id="status">Loading...</p>
+<script>fetch("/api/health").then(r=>r.json()).then(x=>document.getElementById("status").textContent=x.product+" — ONLINE").catch(()=>document.getElementById("status").textContent="API offline");</script>
+</body>
+</html>

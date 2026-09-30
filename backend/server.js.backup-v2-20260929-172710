@@ -1,0 +1,256 @@
+const express = require('express');
+const Database = require('better-sqlite3');
+const cors = require('cors');
+const app = express();
+
+app.use(cors());
+app.use(express.json());
+
+app.get('/api/health', (req, res) => {
+  res.json({ ok: true, product: 'NEXORA UNIVERSITY OS', version: '0.1.0' });
+});
+
+
+// ============================================================
+
+// ============================================================
+// NEXORA UNIVERSITY OS — PERMANENT SQLITE DATA LAYER V2
+// ============================================================
+
+const db = new Database('database/university-os.db');
+
+db.exec(`
+CREATE TABLE IF NOT EXISTS universities (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  code TEXT,
+  city TEXT,
+  state TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS colleges (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  university_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  code TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS departments (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  college_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  code TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS programs (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  department_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  degree TEXT,
+  duration_years INTEGER,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS semesters (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  program_id INTEGER NOT NULL,
+  semester_number INTEGER NOT NULL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS subjects (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  semester_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  code TEXT,
+  credits REAL,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS students (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  college_id INTEGER NOT NULL,
+  name TEXT NOT NULL,
+  enrollment_no TEXT,
+  email TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS skills (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL UNIQUE,
+  category TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS employers (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  name TEXT NOT NULL,
+  industry TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+`);
+
+app.get('/api/v2/dashboard', (req, res) => {
+  const count = table => db.prepare(`SELECT COUNT(*) AS total FROM ${table}`).get().total;
+
+  res.json({
+    ok: true,
+    version: '2.0.0',
+    institution: {
+      universities: count('universities'),
+      colleges: count('colleges'),
+      departments: count('departments'),
+      programs: count('programs'),
+      semesters: count('semesters'),
+      subjects: count('subjects'),
+      students: count('students'),
+      skills: count('skills'),
+      employers: count('employers')
+    }
+  });
+});
+
+app.post('/api/v2/university', (req, res) => {
+  const { name, code='', city='', state='' } = req.body || {};
+  if (!name) return res.status(400).json({ok:false,error:'University name required'});
+
+  const result = db.prepare(
+    `INSERT INTO universities (name,code,city,state) VALUES (?,?,?,?)`
+  ).run(name,code,city,state);
+
+  res.json({
+    ok:true,
+    id: result.lastInsertRowid,
+    message:'University created'
+  });
+});
+
+app.post('/api/v2/college', (req, res) => {
+  const { university_id, name, code='' } = req.body || {};
+  if (!university_id || !name)
+    return res.status(400).json({ok:false,error:'university_id and name required'});
+
+  const result = db.prepare(
+    `INSERT INTO colleges (university_id,name,code) VALUES (?,?,?)`
+  ).run(university_id,name,code);
+
+  res.json({ok:true,id:result.lastInsertRowid,message:'College created'});
+});
+
+app.get('/api/v2/universities', (req,res) => {
+  res.json({ok:true,data:db.prepare(
+    `SELECT * FROM universities ORDER BY id DESC`
+  ).all()});
+});
+
+
+// NEXORA UNIVERSITY OS — INSTITUTION FOUNDATION V1
+// ISOLATED FROM MAIN NEXORA
+// ============================================================
+
+const universityData = {
+  universities: [],
+  colleges: [],
+  departments: [],
+  programs: [],
+  semesters: [],
+  subjects: [],
+  students: [],
+  faculty: [],
+  skills: [],
+  employers: []
+};
+
+app.get('/api/university-os', (req, res) => {
+  res.json({
+    ok: true,
+    product: 'NEXORA UNIVERSITY OS',
+    version: '1.0.0',
+    modules: [
+      'University Management',
+      'College Management',
+      'Department Management',
+      'Program & Semester Structure',
+      'Subject & Curriculum Mapping',
+      'Student Skill Passport',
+      'Assessment Intelligence',
+      'Placement Intelligence',
+      'Employer Skill Matching',
+      'Institutional Analytics'
+    ],
+    data: universityData
+  });
+});
+
+app.post('/api/university', (req, res) => {
+  const { name, code, city, state } = req.body || {};
+  if (!name) return res.status(400).json({ ok:false, error:'University name required' });
+
+  const item = {
+    id: 'UNI-' + Date.now(),
+    name, code: code || '',
+    city: city || '', state: state || ''
+  };
+  universityData.universities.push(item);
+  res.json({ ok:true, university:item });
+});
+
+app.post('/api/college', (req, res) => {
+  const { universityId, name, code } = req.body || {};
+  if (!universityId || !name)
+    return res.status(400).json({ ok:false, error:'universityId and college name required' });
+
+  const item = {
+    id: 'COL-' + Date.now(),
+    universityId, name, code: code || ''
+  };
+  universityData.colleges.push(item);
+  res.json({ ok:true, college:item });
+});
+
+app.post('/api/department', (req, res) => {
+  const { collegeId, name, code } = req.body || {};
+  if (!collegeId || !name)
+    return res.status(400).json({ ok:false, error:'collegeId and department name required' });
+
+  const item = {
+    id: 'DEP-' + Date.now(),
+    collegeId, name, code: code || ''
+  };
+  universityData.departments.push(item);
+  res.json({ ok:true, department:item });
+});
+
+app.get('/api/university-dashboard', (req, res) => {
+  res.json({
+    ok:true,
+    dashboard:{
+      universities: universityData.universities.length,
+      colleges: universityData.colleges.length,
+      departments: universityData.departments.length,
+      programs: universityData.programs.length,
+      subjects: universityData.subjects.length,
+      students: universityData.students.length,
+      faculty: universityData.faculty.length,
+      skills: universityData.skills.length,
+      employers: universityData.employers.length
+    }
+  });
+});
+
+app.get('/', (req, res) => {
+  res.send('NEXORA UNIVERSITY OS: 200');
+});
+
+const PORT = process.env.PORT || 5100;
+app.listen(PORT, () => {
+  console.log('========================================');
+  console.log('NEXORA UNIVERSITY OS: ONLINE');
+  console.log('PORT:', PORT);
+  console.log('MAIN NEXORA: UNTOUCHED');
+  console.log('========================================');
+});
