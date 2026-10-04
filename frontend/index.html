@@ -2336,6 +2336,114 @@ setTimeout(v12LoadAll,600);
     <h3>Assessment Performance</h3>
     <div id="v13AssessmentList" style="margin-top:12px;"></div>
   </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px;margin-top:18px;">
+
+    <div class="card">
+      <h3>Create Assessment</h3>
+      <form id="v13CreateAssessmentForm" style="display:grid;gap:10px;margin-top:12px;">
+
+        <input id="v13AssessmentTitle"
+               placeholder="Assessment title"
+               required>
+
+        <select id="v13AssessmentType">
+          <option value="TEST">TEST</option>
+          <option value="QUIZ">QUIZ</option>
+          <option value="ASSIGNMENT">ASSIGNMENT</option>
+          <option value="EXAM">EXAM</option>
+          <option value="PRACTICAL">PRACTICAL</option>
+        </select>
+
+        <input id="v13AssessmentTopicId"
+               type="number"
+               min="1"
+               placeholder="Topic ID (optional)">
+
+        <input id="v13AssessmentTotalMarks"
+               type="number"
+               min="1"
+               value="100"
+               placeholder="Maximum marks"
+               required>
+
+        <button class="primary" type="submit">
+          Create Assessment
+        </button>
+
+        <div id="v13AssessmentCreateMsg" style="font-size:13px;"></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Add Assessment Result</h3>
+      <form id="v13AddResultForm" style="display:grid;gap:10px;margin-top:12px;">
+
+        <select id="v13ResultAssessment" required>
+          <option value="">Select Assessment</option>
+        </select>
+
+        <select id="v13ResultStudent" required>
+          <option value="">Select Student</option>
+        </select>
+
+        <input id="v13ResultMarks"
+               type="number"
+               min="0"
+               step="0.01"
+               placeholder="Marks obtained"
+               required>
+
+        <button class="primary" type="submit">
+          Save Result
+        </button>
+
+        <div id="v13ResultMsg" style="font-size:13px;"></div>
+      </form>
+    </div>
+
+    <div class="card">
+      <h3>Add Skill Evidence</h3>
+      <form id="v13SkillEvidenceForm" style="display:grid;gap:10px;margin-top:12px;">
+
+        <select id="v13EvidenceStudent" required>
+          <option value="">Select Student</option>
+        </select>
+
+        <input id="v13EvidenceSkillId"
+               type="number"
+               min="1"
+               placeholder="Skill ID"
+               required>
+
+        <select id="v13EvidenceAssessment">
+          <option value="">Assessment (optional)</option>
+        </select>
+
+        <input id="v13EvidenceScore"
+               type="number"
+               min="0"
+               step="0.01"
+               value="0"
+               placeholder="Evidence score">
+
+        <select id="v13EvidenceType">
+          <option value="ASSESSMENT">ASSESSMENT</option>
+          <option value="PROJECT">PROJECT</option>
+          <option value="PRACTICAL">PRACTICAL</option>
+          <option value="CERTIFICATION">CERTIFICATION</option>
+          <option value="OTHER">OTHER</option>
+        </select>
+
+        <button class="primary" type="submit">
+          Save Skill Evidence
+        </button>
+
+        <div id="v13EvidenceMsg" style="font-size:13px;"></div>
+      </form>
+    </div>
+
+  </div>
 </section>
 
 <script>
@@ -2552,6 +2660,8 @@ setTimeout(v12LoadAll,600);
 
       const rows=data.assessments||[];
 
+      fillV13AssessmentForms(rows);
+
       document.getElementById("v13AssessmentList").innerHTML=
         rows.length
         ?rows.map(a=>`
@@ -2576,14 +2686,168 @@ setTimeout(v12LoadAll,600);
     }
   }
 
+
+  function fillV13StudentForms(){
+    const source=document.getElementById("v13StudentSelect");
+    const targets=[
+      document.getElementById("v13ResultStudent"),
+      document.getElementById("v13EvidenceStudent")
+    ];
+
+    targets.forEach(target=>{
+      if(!target || !source) return;
+      const old=target.value;
+      target.innerHTML='<option value="">Select Student</option>';
+
+      Array.from(source.options)
+        .filter(o=>o.value)
+        .forEach(o=>{
+          const n=document.createElement("option");
+          n.value=o.value;
+          n.textContent=o.textContent;
+          target.appendChild(n);
+        });
+
+      if(old) target.value=old;
+    });
+  }
+
+  function fillV13AssessmentForms(assessments){
+    const targets=[
+      document.getElementById("v13ResultAssessment"),
+      document.getElementById("v13EvidenceAssessment")
+    ];
+
+    targets.forEach(target=>{
+      if(!target) return;
+
+      const optional=target.id==="v13EvidenceAssessment";
+      target.innerHTML=
+        optional
+        ?'<option value="">Assessment (optional)</option>'
+        :'<option value="">Select Assessment</option>';
+
+      (assessments||[]).forEach(a=>{
+        const n=document.createElement("option");
+        n.value=a.id;
+        n.textContent=(a.title||"Assessment")+" — "+(a.total_marks||0)+" marks";
+        target.appendChild(n);
+      });
+    });
+  }
+
+  async function createV13Assessment(e){
+    e.preventDefault();
+
+    const msg=document.getElementById("v13AssessmentCreateMsg");
+    msg.textContent="Creating...";
+
+    try{
+      const topicRaw=document.getElementById("v13AssessmentTopicId").value.trim();
+
+      const data=await json("/api/v13/assessment",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          institutionId:Number(institutionId()),
+          topicId:topicRaw?Number(topicRaw):null,
+          title:document.getElementById("v13AssessmentTitle").value.trim(),
+          assessmentType:document.getElementById("v13AssessmentType").value,
+          totalMarks:Number(document.getElementById("v13AssessmentTotalMarks").value)||0
+        })
+      });
+
+      msg.textContent="Assessment created successfully. ID: "+data.id;
+      document.getElementById("v13CreateAssessmentForm").reset();
+      document.getElementById("v13AssessmentTotalMarks").value=100;
+
+      await loadAssessmentIntelligence();
+    }catch(e){
+      msg.textContent="Error: "+e.message;
+    }
+  }
+
+  async function addV13AssessmentResult(e){
+    e.preventDefault();
+
+    const msg=document.getElementById("v13ResultMsg");
+    msg.textContent="Saving...";
+
+    try{
+      const data=await json("/api/v13/assessment-result",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          institutionId:Number(institutionId()),
+          assessmentId:Number(document.getElementById("v13ResultAssessment").value),
+          studentId:Number(document.getElementById("v13ResultStudent").value),
+          marks:Number(document.getElementById("v13ResultMarks").value)||0
+        })
+      });
+
+      msg.textContent=
+        "Result saved successfully — "+
+        Number(data.percentage||0).toFixed(2)+"%";
+
+      await loadAssessmentIntelligence();
+      await loadStudentIntelligence();
+    }catch(e){
+      msg.textContent="Error: "+e.message;
+    }
+  }
+
+  async function addV13SkillEvidence(e){
+    e.preventDefault();
+
+    const msg=document.getElementById("v13EvidenceMsg");
+    msg.textContent="Saving...";
+
+    try{
+      const assessmentRaw=
+        document.getElementById("v13EvidenceAssessment").value.trim();
+
+      const data=await json("/api/v13/skill-evidence",{
+        method:"POST",
+        headers:{"Content-Type":"application/json"},
+        body:JSON.stringify({
+          institutionId:Number(institutionId()),
+          studentId:Number(document.getElementById("v13EvidenceStudent").value),
+          skillId:Number(document.getElementById("v13EvidenceSkillId").value),
+          assessmentId:assessmentRaw?Number(assessmentRaw):null,
+          evidenceType:document.getElementById("v13EvidenceType").value,
+          score:Number(document.getElementById("v13EvidenceScore").value)||0
+        })
+      });
+
+      msg.textContent="Skill evidence saved successfully. ID: "+data.id;
+      await loadStudentIntelligence();
+    }catch(e){
+      msg.textContent="Error: "+e.message;
+    }
+  }
+
   async function refresh(){
     await loadStudents();
+    fillV13StudentForms();
     await loadAssessmentIntelligence();
     await loadStudentIntelligence();
   }
 
-  studentEl?.addEventListener("change",loadStudentIntelligence);
+  studentEl?.addEventListener("change",()=>{
+    fillV13StudentForms();
+    loadStudentIntelligence();
+  });
+
   document.getElementById("v13RefreshBtn")?.addEventListener("click",refresh);
+
+  document.getElementById("v13CreateAssessmentForm")
+    ?.addEventListener("submit",createV13Assessment);
+
+  document.getElementById("v13AddResultForm")
+    ?.addEventListener("submit",addV13AssessmentResult);
+
+  document.getElementById("v13SkillEvidenceForm")
+    ?.addEventListener("submit",addV13SkillEvidence);
 
   window.v13RefreshIntelligence=refresh;
 
